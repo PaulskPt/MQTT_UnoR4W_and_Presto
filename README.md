@@ -35,15 +35,8 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
   - StemmaQt/Qwiic [cable](https://www.adafruit.com/product/4210?srsltid=AfmBOop4XAzdxPfaLartPs8cdARyylU9Bc9dpsJzbvw9bjFX0x_Wen2O)
 
 - **Software**:
-- For the Presto:
 
-  - A Micropython IDE, e.g.: Thonny.
-  - Pimoroni's version of MicroPython for Presto: [firmware](https://github.com/pimoroni/presto/tree/main?tab=readme-ov-file#download-firmware);
-  - Micropython script ```mqtt_presto.py```
-  - `umqtt.simple` library for MQTT communication;
-  - other libraries like: ujson.
-  
-- For the Arduino Uno R4 WiFi:
+- For device 1:
   - Arduino IDE v2.3.5;
   - Arduino sketch "Uno_WiFi_R4_MQTT_test.ino"
   - The following Arduino libraries:
@@ -58,19 +51,39 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
     #include "RTC.h"
     #include "secret.h"
   ``` 
-  [RTC library see](https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino)
+  [RTC library for device 1](https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino)
+
+- For device 2:
+
+  - A Micropython IDE, e.g.: Thonny.
+  - Pimoroni's version of MicroPython for Presto: [firmware](https://github.com/pimoroni/presto/tree/main?tab=readme-ov-file#download-firmware);
+  - Micropython script ```mqtt_presto.py```
+  - `umqtt.simple` library for MQTT communication;
+  - other libraries like: ujson.
   
 ## Installation
 
+- For device 1
+1. Connect the external BME280 I2C sensor to the StemmaQT/Qwiic port of the Uno R4 WiFi;
+2. Connect the Uno R4 WiFi via a USB cable to your PC;
+3. Copy the arduino sketch to a folder of your choice:
+   ```
+   (on a MS Windows 11 PC e.g.: C:\Users\<Username>\Documents\Arduino\Uno_WiFi_R4_MQTT_test)
+   ```
+5. Run the Arduino IDE v2.3.5 (or the online create.arduino.cc) and load the sketch;
+6. In the Arduino IDE > Select other board and port. Fill-in "Arduino uno r4 WiFi". Select when the board was found. Choose the port the Uno R4 WiFi is connected to.
+7. Build and upload the sketch.
+
+- For device 2
 1. Clone or download this repository:
    ```bash
    git clone https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto.git
    ```
    Or download the ZIP file directly from GitHub.
 
-2. Upload the files to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
+2. Upload the Micropython script and the file secret.json to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
 
-3. Customize the MQTT broker, port, and topic in the code (see below)
+3. Customize the MQTT broker, port, and topic into the file ```secret.json``` (see below)
    ```python
    BROKER = "your-mqtt-broker-address" e.g.: "5.196.78.28" // test.mosquitto.org
    PORT = 1883  # Port number
@@ -81,8 +94,8 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
 
 ## Usage
 
-1. Connect both devices to Wi-Fi. Ensure the Presto device is properly connected and configured.
-2. The devices will connect to the specified MQTT broker. The presto as subscriber to the defined topic. The Uno R4 as publisher.
+1. Both devices will connect to the Wi-Fi access point of your choice. For the Presto device, if needed, see the guide [EzWiFi](https://github.com/pimoroni/presto/blob/main/docs/wifi.md)
+2. Both devices will connect to the specified MQTT broker. The Uno R4 WiFi as publisher. The Presto as subscriber to the defined topic.
 3. Incoming messages will be displayed on the screen for 20 seconds each.
    In the current state of this micropython sketch, running on the Presto,
    the following will be displayed:
@@ -146,6 +159,9 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
   }
 }
 ```
+
+## Suggestions (ToDo)
+- Add functionality to set, and with intervals, update the RTC of device 2 (Presto) using the datetime string received from device 1 (Uno R4 WiFi).
 
 ## Contributing
 
