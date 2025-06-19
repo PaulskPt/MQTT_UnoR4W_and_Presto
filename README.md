@@ -32,6 +32,7 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
   - Pimoroni Presto device with a 4 inch square display;
   - Arduino Uno R4 WiFi;
   - Pimoroni BME280 breakout;
+  - StemmaQt/Qwiic [cable](https://www.adafruit.com/product/4210?srsltid=AfmBOop4XAzdxPfaLartPs8cdARyylU9Bc9dpsJzbvw9bjFX0x_Wen2O)
 
 - **Software**:
 - For the Presto:
