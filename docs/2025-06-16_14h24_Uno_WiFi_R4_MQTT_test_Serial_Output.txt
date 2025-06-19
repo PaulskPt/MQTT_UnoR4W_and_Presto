@@ -353,3 +353,81 @@ msg: {Temperature:27.46,Pressure:1005.27,Altitude:66.65,Humidity:48.40,datetime:
 Message msgID = 21 received
 
 
+msg topic sent: sensors/UnoR4W/ambient,     # 22 characters
+payload: {Temperature:27.90,Pressure:1003.08,Altitude:84.99,Humidity:49.87,datetime:2025-06-19T20:07:11,msgID:242}
+# 105 characters
+
+
+------------------------------------
+Arduino Uno R4 WiFi sketch, after some changes: added global bool my_debug.
+Made Serial.print statements dependable of state of global bool my_debug.
+Changes some "line-up" in printing of info (e.g.: "msg topic length", "msg payload length" end "msgID".
+
+20:34:25.906 -> Connected to SSID: Vodafone-8D96F1
+20:34:25.946 -> IP Address: 192.168.1.75
+20:34:25.946 -> signal strength (RSSI):-56 dBm
+20:34:25.946 -> 
+20:34:25.946 -> Timezone offset = 1 hour(s)
+20:34:25.946 -> Starting connection to NTP server...
+20:34:26.062 -> 
+20:34:26.062 -> Attempting to connect to the MQTT broker: 5.196.78.28:1883
+20:34:27.334 -> You're connected to the MQTT broker!
+20:34:27.334 -> 
+20:34:27.334 -> board ID = "UnoR4W"
+20:34:27.334 -> MQTT message send interval = 1 minute.
+20:34:27.334 -> 
+20:34:27.369 -> Update from NTP Server
+20:34:27.460 -> NTP Unix time = 1750365269
+20:34:27.460 -> The RTC was just set to: 2025-06-19T20:34:29
+20:34:27.460 -> msg topic   length =  22
+20:34:27.460 -> msg payload length = 103
+20:34:27.460 -> Sent msg with msgID:   1
+20:34:27.460 -> topic: sensors/UnoR4W/ambient,
+20:34:27.460 -> payload: {Temperature:27.90,Pressure:1003.33,Altitude:82.88,Humidity:49.12,datetime:2025-06-19T20:34:29,msgID:1}
+
+-----------------------------------------------
+Arduino Uno R4 WiFi sketch, after adding one line space at start of print of each message sent,
+(the line containing: "msg topic   length =  ..."
+
+20:40:59.862 -> Attempting to connect to SSID: Vodafone-8D96F1
+20:41:09.923 -> Connected to SSID: Vodafone-8D96F1
+20:41:09.961 -> IP Address: 192.168.1.75
+20:41:09.961 -> signal strength (RSSI):-58 dBm
+20:41:10.007 -> 
+20:41:10.007 -> Timezone offset = 1 hour(s)
+20:41:10.007 -> Starting connection to NTP server...
+20:41:10.127 -> 
+20:41:10.127 -> Attempting to connect to the MQTT broker: 5.196.78.28:1883
+20:41:11.357 -> You're connected to the MQTT broker!
+20:41:11.357 -> 
+20:41:11.357 -> board ID = "UnoR4W"
+20:41:11.357 -> MQTT message send interval = 1 minute.
+20:41:11.357 -> 
+20:41:11.396 -> Update from NTP Server
+20:41:11.465 -> NTP Unix time = 1750365673
+20:41:11.465 -> The RTC was just set to: 2025-06-19T20:41:13
+20:41:11.465 -> 
+20:41:11.465 -> msg topic   length =  22
+20:41:11.465 -> msg payload length = 103
+20:41:11.500 -> Sent msg with msgID:   1
+20:41:11.500 -> topic: sensors/UnoR4W/ambient,
+20:41:11.500 -> payload: {Temperature:27.85,Pressure:1003.40,Altitude:82.30,Humidity:48.63,datetime:2025-06-19T20:41:13,msgID:1}
+20:42:11.586 -> 
+20:42:11.586 -> msg topic   length =  22
+20:42:11.586 -> msg payload length = 103
+20:42:11.631 -> Sent msg with msgID:   2
+20:42:11.631 -> topic: sensors/UnoR4W/ambient,
+20:42:11.631 -> payload: {Temperature:27.84,Pressure:1003.43,Altitude:82.05,Humidity:48.64,datetime:2025-06-19T20:42:14,msgID:2}
+20:43:11.651 -> 
+20:43:11.651 -> msg topic   length =  22
+20:43:11.651 -> msg payload length = 103
+20:43:11.684 -> Sent msg with msgID:   3
+20:43:11.684 -> topic: sensors/UnoR4W/ambient,
+20:43:11.684 -> payload: {Temperature:27.85,Pressure:1003.41,Altitude:82.21,Humidity:48.70,datetime:2025-06-19T20:43:15,msgID:3}
+20:44:11.763 -> 
+20:44:11.763 -> msg topic   length =  22
+20:44:11.763 -> msg payload length = 103
+20:44:11.794 -> Sent msg with msgID:   4
+20:44:11.794 -> topic: sensors/UnoR4W/ambient,
+20:44:11.794 -> payload: {Temperature:27.88,Pressure:1003.42,Altitude:82.13,Humidity:48.53,datetime:2025-06-19T20:44:16,msgID:4}
+
