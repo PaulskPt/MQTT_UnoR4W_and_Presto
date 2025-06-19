@@ -28,13 +28,13 @@ presto.update()
 
 my_debug = False
 
-MSG_NR = None
 temp = None
 pres = None
 alti = None
 humi = None
 publisher_datetime = None
 publisher_time = None
+publisher_msgID = None
 
 # Get the external definitions
 with open('secrets.json') as fp:
@@ -86,7 +86,7 @@ def mqtt_callback(topic, msg):
         msg_rcvd = True
         
 def split_msg():
-    global message_string , msg_rcvd, temp, pres, alti, humi, publisher_datetime, publisher_time
+    global message_string , msg_rcvd, temp, pres, alti, humi, publisher_datetime, publisher_time, publisher_msgID
     if not msg_rcvd:
         return
     json_string = ujson.dumps(message_string, separators=(',', ':'))
@@ -96,7 +96,7 @@ def split_msg():
         print(f"json_string = {json_string}")
         print(f"split_msg(): split_string = {split_string}")
         
-    for i in range(5):
+    for i in range(6):
         if i == 0:
             temp = split_string[0][2:]  # cut the "(
         if i == 1:
@@ -106,10 +106,11 @@ def split_msg():
         if i == 3:
             humi = split_string[3]
         if i == 4:
-            publisher_datetime = split_string[4][:-2] # cut the )"
+            publisher_datetime = split_string[4]
+        if i == 5:
+            publisher_msgID = split_string[5][:-2] # cut the )"
 
-            
-    for i in range(5):
+    for i in range(6):
         if i == 0:
             tmp = temp
         elif i == 1:
@@ -120,6 +121,8 @@ def split_msg():
             tmp = humi
         elif i == 4:
             tmp = publisher_datetime
+        elif i == 5:
+            tmp = publisher_msgID
         
         n = tmp.find(":")
         if n >= 0:
@@ -135,18 +138,23 @@ def split_msg():
             humi = tmp + " %rH"
         elif i == 4:
             publisher_datetime = tmp
-        publisher_time = publisher_datetime[-8:]
+        elif i == 5:
+            publisher_msgID = tmp
             
-    if not my_debug:
+        publisher_time = publisher_datetime[-8:]
+        
+            
+    if my_debug:
         print(f"temp = {temp}")
         print(f"pres = {pres}")
         print(f"alti = {alti}")
         print(f"humi = {humi}")
         print(f"publisher_datetime = {publisher_datetime}")
         print(f"publisher_time = {publisher_time}")
+        print(f"publisher_msgID = {publisher_msgID}")
 
 def draw(mode:int = 1):
-    global message_string, msg_drawn, temp, pres, alti, humi, PUBLISHER_ID, publisher_time
+    global message_string, msg_drawn, temp, pres, alti, humi, PUBLISHER_ID, publisher_time, publisher_msgID
     display.set_font("bitmap8")
     display.set_layer(1)
 
@@ -169,6 +177,7 @@ def draw(mode:int = 1):
     if publisher_time is not None:
         y += line_space
         display.text(publisher_time, x, y, WIDTH)
+        display.text(publisher_msgID, x+100, y, WIDTH)
     y += line_space * 2
     
     if mode == 0:
@@ -251,9 +260,8 @@ def setup():
         raise
 
 def main():
-    global client, msg_rcvd, last_update_time, MSG_NR
+    global client, msg_rcvd, last_update_time, publisher_msgID
     setup()
-    MSG_NR = 0
     draw(0) # Ensure the default message "Waiting for Messages..." is displayed
     
     while True:
@@ -263,9 +271,8 @@ def main():
 
             # Refresh the display periodically
             if msg_rcvd:
-                MSG_NR += 1
                 split_msg()
-                print(f"Message nr {MSG_NR} received")
+                print(f"Message {publisher_msgID} received")
                 draw(1) # Display the new message in mode "PaulskPt"
                 msg_rcvd = False
             elif time.time() - last_update_time > MESSAGE_DISPLAY_DURATION:

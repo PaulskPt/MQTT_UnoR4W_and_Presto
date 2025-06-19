@@ -2,7 +2,7 @@
   Sunday 2025-06-16 20h07 utc +1
   Arduino Uno WiFi R4 MQTT test
   This sketch is a first try to send BME280 sensor data to a MQTT broker
-  and to receive these MQTT messages with a Unexpected Maker SQUiXL device
+  and to receive and display these MQTT messages onto the display of a Pimoroni Presto device
 */
 #include <ArduinoMqttClient.h>
 #include <WiFiS3.h>
@@ -10,28 +10,27 @@
 #include <WiFiUdp.h>
 #include <Adafruit_BME280.h>
 #include <Wire.h>
-#include <EEPROM.h>
 #include <time.h>
 #include "RTC.h" // See: https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino
-//#include <RTClib.h>
 #include "secrets.h"
 
-//char sID[21];
 char sID[] = "UnoR4W";  // length 6 + 1
+unsigned long msgID = 0L;
+unsigned long msgID_max = 999L;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
+char ssid[] = SECRET_SSID;    // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
 
-unsigned int localPort = 2390;      // local port to listen for UDP packets
+// unsigned int localPort = 2390;  // local port to listen for UDP packets
 
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
 // this IP did not work: "85.119.83.194" // for test.mosquitto.org
 // 5.196.0.0 - 5.196.255.255 = FR-OVH-20120823, Country code: FR (info from https://lookup.icann.org/en/lookup)
-const char broker[]  = "5.196.78.28"; // test.mosquitto.org"; // "192.168.1.96";
-int        port      = 1883;
+const char broker[]  = SECRET_MQTT_BROKER; // test.mosquitto.org";
+int        port      = atoi(SECRET_MQTT_PORT);   // 1883;
 
 int wifiStatus = WL_IDLE_STATUS;
 WiFiUDP ntpUDP; // A UDP instance to let us send and receive packets over UDP
@@ -39,13 +38,6 @@ int tzOffset = atoi(SECRET_TIMEZONE_OFFSET); // can be negative or positive (hou
 signed long utc_offset = tzOffset * 3600;    // Attention: signed long! Can be negative or positive
 unsigned long ntp_interval_t = 15 * 60 * 1000L; // 15 minutes
 NTPClient timeClient(ntpUDP, SECRET_NTP_SERVER1, utc_offset, ntp_interval_t);
-
-//IPAddress timeServer(162, 159, 200, 123); // pool.ntp.org NTP server
-// const int NTP_PACKET_SIZE = 48; // NTP timestamp is in the first 48 bytes of the message
-//byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
-// A UDP instance to let us send and receive packets over UDP
-//WiFiUDP Udp;
-//unsigned long epoch;
 
 int led =  LED_BUILTIN;
 int status = WL_IDLE_STATUS;
@@ -73,20 +65,6 @@ void printWifiStatus() {
   Serial.print("signal strength (RSSI):");
   Serial.print(rssi);
   Serial.println(" dBm");
-}
-
-void printWifiData() {
-  // print your board's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print(F("IP Address: "));
-  
-  Serial.println(ip);
-
-  // print your MAC address:
-  byte mac[6];
-  WiFi.macAddress(mac);
-  Serial.print(F("MAC address: "));
-  printMacAddress(mac);
 }
 
 bool connectToWiFi(){
@@ -125,44 +103,6 @@ bool connectToWiFi(){
   return ret;
 }
 
-void printCurrentNet() {
-  // print the SSID of the network you're attached to:
-  Serial.print(F("SSID: "));
-  Serial.print("\"");
-  Serial.print(WiFi.SSID());
-  Serial.println("\"");
-
-  // print the MAC address of the router you're attached to:
-  byte bssid[6];
-  WiFi.BSSID(bssid);
-  Serial.print(F("MAC-address: "));
-  printMacAddress(bssid);
-
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print(F("Signal strength (RSSI): "));
-  Serial.println(rssi);
-
-  // print the encryption type:
-  byte encryption = WiFi.encryptionType();
-  Serial.print(F("Encryption Type: "));
-  Serial.println(encryption, HEX);
-  Serial.println();
-}
-
-void printMacAddress(byte mac[]) {
-  for (int i = 0; i < 6; i++) {
-    if (i > 0) {
-      Serial.print(":");
-    }
-    if (mac[i] < 16) {
-      Serial.print("0");
-    }
-    Serial.print(mac[i], HEX);
-  }
-  Serial.println();
-}
-
 void rtc_sync() 
 {
   timeClient.update();
@@ -183,6 +123,102 @@ void rtc_sync()
   RTC.getTime(currentTime); 
   Serial.print(F("The RTC was just set to: "));
   Serial.println(String(currentTime));
+}
+
+bool send_msg()
+{
+  bool ret = false;
+  float Rvalue0 = bme.readTemperature();
+  float Rvalue1 = bme.readPressure() / 100.0F;
+  float Rvalue2 = bme.readAltitude(SEALEVELPRESSURE_HPA);
+  float Rvalue3 = bme.readHumidity();
+  if (Rvalue1 < 800.0 || Rvalue1 > 1100.0)
+    return ret; // don't accept unrealistic extremes
+  
+  char floatStr0[15];
+  char floatStr1[15];
+  char floatStr2[15];
+  char floatStr3[15];
+
+  char topic[26];
+  char msg[128];
+  
+  topic[0] = '\0';  // clear
+  msg[0] = '\0';
+
+  strcpy(topic, SECRET_MQTT_TOPIC); // "sensors/UnoR4W/ambient"
+  strcat(topic, "\0");
+
+  strcpy(msg, "{"); 
+  strcat(msg, "Temperature");
+  strcat(msg, ":"); 
+  floatStr0[0] = '\0';  // clear
+  dtostrf(Rvalue0, 4, 2, floatStr0);
+  strcat(msg, floatStr0);    // add value
+  strcat(msg, ",");
+  strcat(msg, "Pressure");
+  strcat(msg, ":");
+  floatStr1[0] = '\0';  // clear
+  dtostrf(Rvalue1, 4, 2, floatStr1);
+  strcat(msg, floatStr1);    // add value
+  strcat(msg, ",");
+  strcat(msg, "Altitude");
+  strcat(msg, ":");
+  floatStr2[0] = '\0';  // clear
+  dtostrf(Rvalue2, 4, 2, floatStr2);
+  strcat(msg, floatStr2);    // add value
+  strcat(msg, ",");
+  strcat(msg, "Humidity");
+  strcat(msg, ":");
+  floatStr3[0] = '\0';       // clear
+  dtostrf(Rvalue3, 4, 2, floatStr3);
+  strcat(msg, floatStr3);    // add value
+
+  RTCTime currentTime;
+  RTC.getTime(currentTime);  // Get datetime
+
+  strcat(msg, ",");
+  strcat(msg, "datetime");
+  strcat(msg, ":");
+  strcat(msg, String(currentTime).c_str()); // e.g.: 2025-06-18T18:47:08
+  
+  msgID++;
+  if (msgID > msgID_max)
+    msgID = 1;
+
+  strcat(msg, ",");
+  strcat(msg, "msgID");
+  strcat(msg, ":");
+  
+  char numStr[32]; // Enough to hold any 64-bit unsigned long
+  snprintf(numStr, sizeof(numStr), "%lu", msgID); // Convert number to string
+  strncat(msg, numStr, sizeof(msg) - strlen(msg) - 1); // Append safely
+
+  strcat(msg, "}");
+  strcat(msg, "\0");
+
+  //uint8_t le = sizeof(msg)/sizeof(msg[0]);
+  
+  uint8_t cnt = 0;
+  for (uint8_t i = 0; msg[i] != '\0'; i++)
+  {
+    if (msg[i] != '\0')
+      cnt++;
+  }
+  Serial.print(F("msg length = "));
+  Serial.println(cnt);
+
+  mqttClient.beginMessage(topic);
+  mqttClient.print(msg);
+  mqttClient.endMessage();
+  
+  Serial.print(F("msg topic sent: "));
+  Serial.print(topic);
+  Serial.print(",\npayload: ");
+  Serial.println(msg);
+  ret = true;
+
+  return ret;
 }
 
 void setup() {
@@ -267,19 +303,12 @@ void setup() {
 
 void loop() 
 {
-  const char *txts1[] PROGMEM = {"Temperature", "Pressure", "Altitude", "Humidity"};
-  const char *txts2[] PROGMEM = {"°C", "hPa", "m", "%rH"};
-  const char topicMsg[] PROGMEM = "Sending message to topic: ";
-  const char *topics[] PROGMEM = {"temp", "pres", "alti", "humi"};
-  const char mqtt_heading[] = "sensors/";
   //set interval for sending messages (milliseconds)
   const long mqtt_interval_t = 60 * 1000; // 1 minute
   unsigned long previousMillis = 0;
   bool start = true;
   unsigned long start_t = millis();
   unsigned long elapsed_t = 0;
-  bool test_only = false;
-  uint8_t mode = 1;
 
   RTCTime currentTime;
   
@@ -306,8 +335,6 @@ void loop()
     {
       start_t = currentMillis;
       rtc_sync();
-      //Serial.print(F("NTP formatted time: "));
-      //Serial.println(timeClient.getFormattedTime());
     }
 
     if (start || currentMillis - previousMillis >= mqtt_interval_t) 
@@ -316,146 +343,15 @@ void loop()
       // save the last time a message was sent
       previousMillis = currentMillis;
 
-      float Rvalue0 = bme.readTemperature();
-      float Rvalue1 = bme.readPressure() / 100.0F;
-      float Rvalue2 = bme.readAltitude(SEALEVELPRESSURE_HPA);
-      float Rvalue3 = bme.readHumidity();
-      if (Rvalue1 < 800.0 || Rvalue1 > 1100.0)
-        continue; // don't accept unrealistic extremes
-      
-      char floatStr0[15];
-      char floatStr1[15];
-      char floatStr2[15];
-      char floatStr3[15];
+      uint8_t try_cnt = 0;
+      uint8_t try_cnt_max = 10;
 
-      // send messages, the Print interface can be used to set the message contents
-      uint8_t i_max = (test_only) ? 1 : 4;
-      if (mode == 0)
+      while (!send_msg())
       {
-        char msg[60];
-        for (uint8_t i = 0; i < i_max; i++)
-        {
-          msg[0] = '\0';       // clear
-          
-          strcpy(msg, mqtt_heading); // "sensors/"                 (length  8 chars)
-          strcat(msg, sID);          // "UnoR4W"                   (length  6 chars)
-          strcat(msg, "/");          // "/"                        (length  1 char)
-          strcat(msg, topics[i]);    // e.g: "temp"                (length  4 chars)
-          strcat(msg, "/");          // "/"           "            (length  1 char)
-          strcat(msg, txts1[i]);     // "Temperature"              (length 11 chars)
-          strcat(msg, " = ");        // " = "                      (length  3 chars)
-          //                                                       (total  20 chars) + 1
-
-          if (i == 0)
-          {   
-            //Serial.println(Rvalue1);  
-            floatStr0[0] = '\0';  // clear
-            dtostrf(Rvalue0, 4, 2, floatStr0); //                  (length  7 char)
-            strcat(msg, floatStr0);     // add value
-          }
-          if (i == 1)
-          {   
-            //Serial.println(Rvalue2);
-            floatStr1[0] = '\0';  // clear
-            dtostrf(Rvalue1, 4, 2, floatStr1);  //                 (length 7 char)
-            strcat(msg, floatStr1);     // add value
-          }
-          if (i == 2)
-          {   
-            //Serial.println(Rvalue3);
-            floatStr2[0] = '\0';  // clear
-            dtostrf(Rvalue2, 4, 2, floatStr2);  //                 (length 7 char)
-            strcat(msg, floatStr2);     // add value
-          }
-          if (i == 3)
-          {   
-            //Serial.println(Rvalue4);
-            floatStr3[0] = '\0';  // clear
-            dtostrf(Rvalue3, 4, 2, floatStr3);  //                  (length 7 char)
-            strcat(msg, floatStr3);     // add value
-          }
-          strcat(msg, "\0");          // null-terminator            (total   8 chars)
-
-          Serial.print(F("mqtt msg "));
-          Serial.print(i+1);
-          Serial.print(" = \"");
-          Serial.print(msg);
-          Serial.println("\"");
-            
-          mqttClient.beginMessage(msg);
-          if (i == 0)
-            mqttClient.print(floatStr0);
-          else if (i == 1)
-            mqttClient.print(floatStr1);
-          else if (i == 2)
-            mqttClient.print(floatStr2);
-          else if (i == 3)
-            mqttClient.print(floatStr3);
-
-          mqttClient.endMessage();
-          delay(40000);
-        }
-        Serial.println();
-      }
-      else if (mode == 1)
-      {
-        char topic[26]; //  = "\"sensors/UnoR4W/ambient\"";  // length 22 + 1 = 23 chars
-        char msg[140];
-        
-        topic[0] = '\0';
-        msg[0] = '\0';       // clear
-
-        //strcpy(topic, "\"");                                  // (length  1 char)
-        strcpy(topic, "sensors/UnoR4W/ambient");                // (length 22 chars)
-        //strcat(topic, "\"");                                  // (length  1 char)
-        strcat(topic, "\0");                                    // (length  1 char)    Total: 23 chars
-
-        strcpy(msg, "{");          // "{"                        (length  1 char)
-        strcat(msg, txts1[0]);     // "Temperature"                (length 11 chars)   31
-        strcat(msg, ":");          // ":"                      (length  1 char)
-        floatStr0[0] = '\0';  // clear
-        dtostrf(Rvalue0, 4, 2, floatStr0); //                      (length  7 char)
-        strcat(msg, floatStr0);    // add value
-        strcat(msg, ",");          // ","                      (length  1 chars)
-        strcat(msg, txts1[1]);     // "Pressure"                   (length  8 chars)   21
-        strcat(msg, ":");          // ":"                      (length  1 chars)
-        floatStr1[0] = '\0';  // clear
-        dtostrf(Rvalue1, 4, 2, floatStr1);  //                     (length 7 char)
-        strcat(msg, floatStr1);    // add value
-        strcat(msg, ",");          // ","                      (length  1 chard)
-        strcat(msg, txts1[2]);     // "Altitude"                   (length  8 chars)   21
-        strcat(msg, ":");          // ":"                      (length  1 chard)
-        floatStr2[0] = '\0';  // clear
-        dtostrf(Rvalue2, 4, 2, floatStr2);  //                     (length 7 char)
-        strcat(msg, floatStr2);    // add value
-        strcat(msg, ",");          // ","                      (length  1 chars)
-        strcat(msg, txts1[3]);     // "Humidity"                   (length  8 chars)   21
-        strcat(msg, ":");          // ":"                      (length  1 chard)
-        floatStr3[0] = '\0';  // clear
-        dtostrf(Rvalue3, 4, 2, floatStr3);  //                     (length 7 char)      7
-        strcat(msg, floatStr3);    // add value
-
-        RTCTime currentTime;
-        RTC.getTime(currentTime); 
-        //Serial.print(F("RTC datetime: "));
-        //Serial.println(String(currentTime));
-        strcat(msg, ",");          //                                    (length  1 char)
-        strcat(msg, "datetime");   //                                    (length  8 chars)
-        strcat(msg, ":");          //                                    (length  1 char)
-        strcat(msg, String(currentTime).c_str()); // e.g.: 2025-06-18T18:47:08   (length 19 chars)
-
-        strcat(msg, "}");          // "}"                                (length  2 chars)
-        strcat(msg, "\0");          // end-of-string delimiter           (length  1 char)
-
-
-        mqttClient.beginMessage(topic);
-        mqttClient.print(msg);
-        mqttClient.endMessage();   //                            Total msg: 135 characters
-        
-        Serial.print(F("msg topic sent: "));
-        Serial.print(topic);
-        Serial.print(", payload: ");
-        Serial.println(msg);
+        try_cnt++;
+        if (try_cnt >= try_cnt_max)
+          break;
+        delay(1000);
       }
     }
   }

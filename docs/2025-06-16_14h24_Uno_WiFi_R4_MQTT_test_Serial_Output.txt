@@ -1,0 +1,355 @@
+Monday 2025-06-16 14h12 utc+1
+Board: Arduino Uno R4 WiFi
+Attached via Qwiic: Pimoroni BME280 Breakout sensor.
+IDE: Arduino v2.3.5
+
+Sketch: Uno_WiFi_R4_MQTT_test.ino
+
+Serial Output:
+
+Attempting to connect to WPA SSID: "Vodafone-8D96F1"
+You're connected to the network: SSID: "Vodafone-8D96F1"
+MAC-address: 9C:B2:E8:FC:02:2C
+Signal strength (RSSI): -41
+Encryption Type: 2
+
+IP Address: 192.168.1.75
+MAC-address: 9C:B2:E8:FC:02:2C
+Signal strength (RSSI): -40
+Encryption Type: 2
+
+IP Address: 192.168.1.75
+MAC address: DC:54:75:C3:D9:94
+Attempting to connect to the MQTT broker: test.mosquitto.org
+You're connected to the MQTT broker!
+
+board ID = "PaulskPt_UnoR4WiFi"
+MQTT message send interval = 1 minute.
+
+mqtt msg 1 = "sensors/PaulskPt_UnoR4WiFi/BME280_temperature/27.63"
+mqtt msg 2 = "sensors/PaulskPt_UnoR4WiFi/BME280_pressure/1004.01"
+mqtt msg 3 = "sensors/PaulskPt_UnoR4WiFi/BME280_altitude/77.24"
+mqtt msg 4 = "sensors/PaulskPt_UnoR4WiFi/BME280_humidity/36.90"
+
+----------------------------
+After some changest in the sketch for the Arduino Uno R5 WiFi:
+
+13:26:46.529 -> Connected to SSID: Vodafone-8D96F1
+13:26:46.529 -> IP Address: 192.168.1.75
+13:26:46.574 -> signal strength (RSSI):-50 dBm
+13:26:46.574 -> 
+13:26:46.574 -> Timezone offset = 1 hour(s)
+13:26:46.574 -> Starting connection to NTP server...
+13:26:46.715 -> 
+13:26:46.715 -> Attempting to connect to the MQTT broker: 5.196.78.28:1883
+13:27:17.534 -> MQTT connection failed! Error code = -2
+13:27:43.714 -> MQTT connection failed! Error code = -2
+13:28:02.974 -> You're connected to the MQTT broker!
+13:28:02.974 -> 
+13:28:02.974 -> board ID = "UnoR4W"
+13:28:02.974 -> MQTT message send interval = 1 minute.
+13:28:02.974 -> 
+13:28:03.017 -> Update from NTP Server
+13:28:03.107 -> NTP Unix time = 1750339683
+13:28:03.107 -> The RTC was just set to: 2025-06-19T13:28:03
+13:28:03.107 -> msg length = 103
+13:28:03.107 -> msg topic sent: sensors/UnoR4W/ambient,
+13:28:03.107 -> payload: {Temperature:27.41,Pressure:1005.50,Altitude:64.73,Humidity:49.24,datetime:2025-06-19T13:28:03,msgID:1}
+13:29:03.083 -> msg length = 103
+13:29:03.114 -> msg topic sent: sensors/UnoR4W/ambient,
+13:29:03.114 -> payload: {Temperature:27.41,Pressure:1005.41,Altitude:65.45,Humidity:49.04,datetime:2025-06-19T13:29:04,msgID:2}
+
+---------------------------------------
+And after the changes in the micropython script for the Pimoroni Presto:
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.39,Pressure:1005.42,Altitude:65.39,Humidity:49.05,datetime:2025-06-19T13:30:05,msgID:3}
+json_string = "{Temperature:27.39,Pressure:1005.42,Altitude:65.39,Humidity:49.05,datetime:2025-06-19T13:30:05,msgID:3}"
+split_msg(): split_string = ['"{Temperature:27.39', 'Pressure:1005.42', 'Altitude:65.39', 'Humidity:49.05', 'datetime:2025-06-19T13:30:05', 'msgID:3}"']
+temp = Temperature = 27.39 °C
+pres = Pressure = 1005.42 hPa
+alti = Altitude = 65.39 m
+humi = Humidity = 49.05 %rH
+publisher_datetime = datetime = 2025-06-19T13:30:05
+publisher_time = 13:30:05
+publisher_msgID = msgID = 3
+Message nr 8 received
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.38,Pressure:1005.41,Altitude:65.48,Humidity:48.57,datetime:2025-06-19T13:31:06,msgID:4}
+json_string = "{Temperature:27.38,Pressure:1005.41,Altitude:65.48,Humidity:48.57,datetime:2025-06-19T13:31:06,msgID:4}"
+split_msg(): split_string = ['"{Temperature:27.38', 'Pressure:1005.41', 'Altitude:65.48', 'Humidity:48.57', 'datetime:2025-06-19T13:31:06', 'msgID:4}"']
+temp = Temperature = 27.38 °C
+pres = Pressure = 1005.41 hPa
+alti = Altitude = 65.48 m
+humi = Humidity = 48.57 %rH
+publisher_datetime = datetime = 2025-06-19T13:31:06
+publisher_time = 13:31:06
+publisher_msgID = msgID = 4
+{Temperature:27.76,Pressure:1006.29,Altitude:58.07,Humidity:48.71}
+
+---------------------------------
+After some changes on: 2025-06-18 around 19h35 utc +1
+
+18:47:05.917 -> Connected to SSID: Vodafone-8D96F1
+18:47:05.917 -> IP Address: 192.168.1.75
+18:47:05.957 -> signal strength (RSSI):-40 dBm
+18:47:05.957 -> 
+18:47:05.957 -> Timezone offset = 1 hour(s)
+18:47:05.957 -> Starting connection to NTP server...
+18:47:06.095 -> 
+18:47:06.095 -> Attempting to connect to the MQTT broker: 5.196.78.28:1883
+18:47:07.387 -> You're connected to the MQTT broker!
+18:47:07.387 -> 
+18:47:07.387 -> board ID = "UnoR4W"
+18:47:07.387 -> MQTT message send interval = 1 minute.
+18:47:07.387 -> 
+18:47:07.434 -> Update from NTP Server
+18:47:07.481 -> NTP Unix time = 1750272428
+18:47:07.481 -> The RTC was just set to: 2025-06-18T18:47:08
+18:47:07.526 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.65,Pressure:1005.16,Altitude:67.59,Humidity:47.66}
+
+[...]
+18:19:35.046 -> Update from NTP Server
+18:19:35.124 -> NTP Unix time = 1750270775
+18:19:35.124 -> The RTC was just set to: 2025-06-18T18:19:35
+18:19:35.292 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.63,Pressure:1005.30,Altitude:66.37,Humidity:47.88}
+18:20:35.392 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.57,Pressure:1005.33,Altitude:66.19,Humidity:47.76}
+18:21:35.484 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.64,Pressure:1005.34,Altitude:66.08,Humidity:47.65}
+18:22:35.555 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.63,Pressure:1005.34,Altitude:66.06,Humidity:47.38}
+18:23:35.666 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.55,Pressure:1005.33,Altitude:66.17,Humidity:47.54}
+18:24:35.696 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.53,Pressure:1005.34,Altitude:66.10,Humidity:47.60}
+
+------------------------------
+After adding a datetime at the end of the payload string:
+The RTC was just set to: 2025-06-18T19:47:05
+19:47:04.725 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.36,Pressure:1006.28,Altitude:58.17,Humidity:47.36,datetime:2025-06-18T19:47:05}
+19:48:04.750 -> msg topic sent: sensors/UnoR4W/ambient, payload: {Temperature:28.41,Pressure:1006.24,Altitude:58.52,Humidity:46.41,datetime:2025-06-18T19:48:06}
+
+---------------------------------
+Wednesday 2025-06-18 18h18 utc +1
+Board: Pimoroni Presto
+IDE: Thonny
+Script from: "https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py
+
+Changes by @PaulskPt 
+
+Shell output:
+
+Connecting to WiFi...
+WiFi connected.
+Connecting to MQTT broker at 5.196.78.28 on port 1883...
+Successfully connected to MQTT broker.
+Subscribed to topic: "sensors/UnoR4W/ambient/#"
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.63,Pressure:1005.30,Altitude:66.37,Humidity:47.88}
+json_string = "{Temperature:28.63,Pressure:1005.30,Altitude:66.37,Humidity:47.88}"
+split_msg(): split_string = ['"{Temperature:28.63', 'Pressure:1005.30', 'Altitude:66.37', 'Humidity:47.88}"']
+temp = Temperature = 28.63
+pres = Pressure = 1005.30
+alti = Altitude = 66.37
+humi = Humidity = 47.88
+Message nr 1 received
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.51,Pressure:1005.34,Altitude:66.09,Humidity:47.29}
+json_string = "{Temperature:28.51,Pressure:1005.34,Altitude:66.09,Humidity:47.29}"
+split_msg(): split_string = ['"{Temperature:28.51', 'Pressure:1005.34', 'Altitude:66.09', 'Humidity:47.29}"']
+temp = Temperature = 28.51
+pres = Pressure = 1005.34
+alti = Altitude = 66.09
+humi = Humidity = 47.29
+Message nr 2 received
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.60,Pressure:1005.29,Altitude:66.52,Humidity:48.38}
+json_string = "{Temperature:28.60,Pressure:1005.29,Altitude:66.52,Humidity:48.38}"
+split_msg(): split_string = ['"{Temperature:28.60', 'Pressure:1005.29', 'Altitude:66.52', 'Humidity:48.38}"']
+temp = Temperature = 28.60
+pres = Pressure = 1005.29
+alti = Altitude = 66.52
+humi = Humidity = 48.38
+Message nr 3 received
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.64,Pressure:1005.28,Altitude:66.53,Humidity:47.67}
+json_string = "{Temperature:28.64,Pressure:1005.28,Altitude:66.53,Humidity:47.67}"
+split_msg(): split_string = ['"{Temperature:28.64', 'Pressure:1005.28', 'Altitude:66.53', 'Humidity:47.67}"']
+temp = Temperature = 28.64
+pres = Pressure = 1005.28
+alti = Altitude = 66.53
+humi = Humidity = 47.67
+Message nr 4 received
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.57,Pressure:1005.25,Altitude:66.79,Humidity:47.42}
+json_string = "{Temperature:28.57,Pressure:1005.25,Altitude:66.79,Humidity:47.42}"
+split_msg(): split_string = ['"{Temperature:28.57', 'Pressure:1005.25', 'Altitude:66.79', 'Humidity:47.42}"']
+temp = Temperature = 28.57
+pres = Pressure = 1005.25
+alti = Altitude = 66.79
+humi = Humidity = 47.42
+Message nr 5 received
+
+----------------------------------------
+18h36, after minor changes in draw() and in split_msg():
+
+>>> %Run -c $EDITOR_CONTENT
+
+Connecting to WiFi...
+WiFi connected.
+Connecting to MQTT broker at 5.196.78.28 on port 1883...
+Successfully connected to MQTT broker.
+Subscribed to topic: "sensors/UnoR4W/ambient/#"
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.71,Pressure:1005.19,Altitude:67.31,Humidity:47.45}
+temp = Temperature = 28.71 °C
+pres = Pressure = 1005.19 hPa
+alti = Altitude = 67.31 m
+humi = Humidity = 47.45 %rH
+Message nr 1 received
+
+--------------------------------------------------
+After adding the extracting and slicing the from the publisher received datetime and from that extracted time:
+PY: soft reboot
+Connecting to WiFi...
+WiFi connected.
+Connecting to MQTT broker at 5.196.78.28 on port 1883...
+Successfully connected to MQTT broker.
+Subscribed to topic: "sensors/UnoR4W/ambient/#"
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:28.21,Pressure:1006.16,Altitude:59.23,Humidity:47.47,datetime:2025-06-18T20:02:04}
+temp = Temperature = 28.21 °C
+pres = Pressure = 1006.16 hPa
+alti = Altitude = 59.23 m
+humi = Humidity = 47.47 %rH
+publisher_datetime = datetime = 2025-06-18T20:02:04 <<<=== new
+publisher_time = 20:02:04     <<<=== new
+Message nr 1 received
+
+[...]
+
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:27.31,Pressure:1005.42,Altitude:65.36,Humidity:46.77,datetime:2025-06-18T21:51:19}
+temp = Temperature = 27.31 °C
+pres = Pressure = 1005.42 hPa
+alti = Altitude = 65.36 m
+humi = Humidity = 46.77 %rH
+publisher_datetime = datetime = 2025-06-18T21:51:19
+publisher_time = 21:51:19
+Message nr 89 received
+Received message on topic sensors/UnoR4W/ambient, msg: {Temperature:27.36,Pressure:1005.36,Altitude:65.90,Humidity:46.89,datetime:2025-06-18T21:52:20}
+temp = Temperature = 27.36 °C
+pres = Pressure = 1005.36 hPa
+alti = Altitude = 65.90 m
+humi = Humidity = 46.89 %rH
+publisher_datetime = datetime = 2025-06-18T21:52:20
+publisher_time = 21:52:20
+Message nr 90 received
+
+----------------------------------------
+Thursday 2025-06-19 12h44 utc +1
+After adding a MsgID at the end of the MQTT message.
+
+12:43:00.632 -> Connected to SSID: Vodafone-8D96F1
+12:43:00.670 -> IP Address: 192.168.1.75
+12:43:00.670 -> signal strength (RSSI):-51 dBm
+12:43:00.670 -> 
+12:43:00.670 -> Timezone offset = 1 hour(s)
+12:43:00.670 -> Starting connection to NTP server...
+12:43:00.798 -> 
+12:43:00.798 -> Attempting to connect to the MQTT broker: 5.196.78.28:1883
+12:43:10.823 -> MQTT connection failed! Error code = -2
+12:43:21.868 -> MQTT connection failed! Error code = -2
+12:43:45.701 -> MQTT connection failed! Error code = -2
+12:44:28.003 -> MQTT connection failed! Error code = -2
+12:44:49.713 -> MQTT connection failed! Error code = -2
+12:44:50.679 -> You're connected to the MQTT broker!
+12:44:50.679 -> 
+12:44:50.679 -> board ID = "UnoR4W"
+12:44:50.679 -> MQTT message send interval = 1 minute.
+12:44:50.679 -> 
+12:44:50.711 -> Update from NTP Server
+12:44:50.797 -> NTP Unix time = 1750337091
+12:44:50.797 -> The RTC was just set to: 2025-06-19T12:44:51
+[...]
+13:28:03.107 -> msg topic sent: sensors/UnoR4W/ambient,
+13:28:03.107 -> payload: {Temperature:27.41,Pressure:1005.50,Altitude:64.73,Humidity:49.24,datetime:2025-06-19T13:28:03,msgID:1}
+13:29:03.083 -> msg length = 103
+13:29:03.114 -> msg topic sent: sensors/UnoR4W/ambient,
+13:29:03.114 -> payload: {Temperature:27.41,Pressure:1005.41,Altitude:65.45,Humidity:49.04,datetime:2025-06-19T13:29:04,msgID:2}
+13:30:03.207 -> msg length = 103
+13:30:03.207 -> msg topic sent: sensors/UnoR4W/ambient,
+13:30:03.207 -> payload: {Temperature:27.39,Pressure:1005.42,Altitude:65.39,Humidity:49.05,datetime:2025-06-19T13:30:05,msgID:3}
+13:31:03.274 -> msg length = 103
+----------------------------------------
+After adding changes in the script for the Pimoroni Presto, regarding the msgID:
+
+WiFi connected.
+Connecting to MQTT broker at 5.196.78.28 on port 1883...
+Successfully connected to MQTT broker.
+Subscribed to topic: "sensors/UnoR4W/ambient/#"
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.41,Pressure:1005.50,Altitude:64.73,Humidity:49.24,datetime:2025-06-19T13:28:03,msgID:1}
+json_string = "{Temperature:27.41,Pressure:1005.50,Altitude:64.73,Humidity:49.24,datetime:2025-06-19T13:28:03,msgID:1}"
+split_msg(): split_string = ['"{Temperature:27.41', 'Pressure:1005.50', 'Altitude:64.73', 'Humidity:49.24', 'datetime:2025-06-19T13:28:03', 'msgID:1}"']
+temp = Temperature = 27.41 °C
+pres = Pressure = 1005.50 hPa
+alti = Altitude = 64.73 m
+humi = Humidity = 49.24 %rH
+publisher_datetime = datetime = 2025-06-19T13:28:03
+publisher_time = 13:28:03
+publisher_msgID = msgID = 1
+Message nr 6 received
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.41,Pressure:1005.41,Altitude:65.45,Humidity:49.04,datetime:2025-06-19T13:29:04,msgID:2}
+json_string = "{Temperature:27.41,Pressure:1005.41,Altitude:65.45,Humidity:49.04,datetime:2025-06-19T13:29:04,msgID:2}"
+split_msg(): split_string = ['"{Temperature:27.41', 'Pressure:1005.41', 'Altitude:65.45', 'Humidity:49.04', 'datetime:2025-06-19T13:29:04', 'msgID:2}"']
+temp = Temperature = 27.41 °C
+pres = Pressure = 1005.41 hPa
+alti = Altitude = 65.45 m
+humi = Humidity = 49.04 %rH
+publisher_datetime = datetime = 2025-06-19T13:29:04
+publisher_time = 13:29:04
+publisher_msgID = msgID = 2
+Message nr 7 received
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.39,Pressure:1005.42,Altitude:65.39,Humidity:49.05,datetime:2025-06-19T13:30:05,msgID:3}
+json_string = "{Temperature:27.39,Pressure:1005.42,Altitude:65.39,Humidity:49.05,datetime:2025-06-19T13:30:05,msgID:3}"
+split_msg(): split_string = ['"{Temperature:27.39', 'Pressure:1005.42', 'Altitude:65.39', 'Humidity:49.05', 'datetime:2025-06-19T13:30:05', 'msgID:3}"']
+temp = Temperature = 27.39 °C
+pres = Pressure = 1005.42 hPa
+alti = Altitude = 65.39 m
+humi = Humidity = 49.05 %rH
+publisher_datetime = datetime = 2025-06-19T13:30:05
+publisher_time = 13:30:05
+publisher_msgID = msgID = 3
+Message nr 8 received
+
+
+-----------------------------
+After a small change in the micropython script for the Pimoroni Presto: 
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.47,Pressure:1005.33,Altitude:66.15,Humidity:48.45,datetime:2025-06-19T13:45:05,msgID:18}
+json_string = "{Temperature:27.47,Pressure:1005.33,Altitude:66.15,Humidity:48.45,datetime:2025-06-19T13:45:05,msgID:18}"
+split_msg(): split_string = ['"{Temperature:27.47', 'Pressure:1005.33', 'Altitude:66.15', 'Humidity:48.45', 'datetime:2025-06-19T13:45:05', 'msgID:18}"']
+temp = Temperature = 27.47 °C
+pres = Pressure = 1005.33 hPa
+alti = Altitude = 66.15 m
+humi = Humidity = 48.45 %rH
+publisher_datetime = datetime = 2025-06-19T13:45:05
+publisher_time = 13:45:05
+publisher_msgID = msgID = 18
+Message msgID = 18 received
+
+------------------------------
+After another small change in the micropython script for the Pimoroni Presto:
+(in split_msg() changed 2x "if not my_debug:" into "if my_debug:")
+
+ 
+>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+Connecting to WiFi...
+WiFi connected.
+Connecting to MQTT broker at 5.196.78.28 on port 1883...
+Successfully connected to MQTT broker.
+Subscribed to topic: "sensors/UnoR4W/ambient/#"
+
+Received message on topic sensors/UnoR4W/ambient,
+msg: {Temperature:27.46,Pressure:1005.27,Altitude:66.65,Humidity:48.40,datetime:2025-06-19T13:48:08,msgID:21}
+Message msgID = 21 received
+
+
