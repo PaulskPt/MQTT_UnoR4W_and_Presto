@@ -36,7 +36,8 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
 
 - **Software**:
 - For the Presto:
-  A Micropython IDE, e.g.: Thonny.
+
+  - A Micropython IDE, e.g.: Thonny.
   - MicroPython firmware;
   - `umqtt.simple` library for MQTT communication;
   - other libraries like: ujson.
