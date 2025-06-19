@@ -219,7 +219,6 @@ def setup():
     try:
         client.connect()
         print(f"Successfully connected to MQTT broker.") # at {BROKER}.")
-        #TOPIC = topicsDb[0]
         client.subscribe(TOPIC)
         print(f"Subscribed to topic: \"{TOPIC.decode()}\"")
         msg_drawn = False
