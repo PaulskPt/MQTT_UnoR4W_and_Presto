@@ -1,5 +1,6 @@
 # 2025-06-17 Downloaded from: https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py
-# Changes by @PaulskPt
+# by Andy Hudson-Smith going by @digitalurban
+# Changes by Paulus Schulinck going by @PaulskPt
 #
 import ujson
 #import ubinascii
@@ -35,6 +36,7 @@ humi = None
 publisher_datetime = None
 publisher_time = None
 
+# Get the external definitions
 with open('secrets.json') as fp:
     secrets = ujson.loads(fp.read())
 
