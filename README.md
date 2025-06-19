@@ -11,20 +11,28 @@ The MQTT messages are published from an Arduino Uno R4 WiFi device that has conn
 
 ## Features
 
-- **MQTT Integration**: 
+- **MQTT Integration**:
+  ```
   Device 1: Arduino Uno R4 WiFi: connects to a MQTT Broker as Publisher device;
-  Device 2: Pimoroni Presto: connects to the same MQTT Broker. Then subscribes to the MQTT topic that device #1 publishes. It displays received messages on the screen.
-  
-- **Customizable Display**: Messages are shown in orange text on a black background. In this moment the time (hh:mi:ss), extracted from the received message, will be shown on the screen.
-- **Message Timing**: Ensures each message is displayed for at least 20 seconds.
+  Device 2: Pimoroni Presto: connects to the same MQTT Broker.
+            Then subscribes to the MQTT topic that device #1 publishes.
+            It displays received messages on the screen.
+```
+- **Customizable Display**:
+```
+Messages are shown in orange text on a black background.
 
+In this moment the time (hh:mi:ss), extracted from the received message, will be shown on the screen.
+```
+- **Message Timing**: Ensures each message is displayed for at least 20 seconds.
+```
 ## Requirements
 
 - **Hardware**:
-  - Presto Display
+  - Pimoroni Presto device with a 4 inch square display;
   - Arduino Uno R4 WiFi;
   - Pimoroni BME280 breakout;
-- 
+
 - **Software**:
 - For the Presto:
   A Micropython IDE, e.g.: Thonny.
@@ -44,14 +52,15 @@ The MQTT messages are published from an Arduino Uno R4 WiFi device that has conn
     #include <Adafruit_BME280.h>
     #include <Wire.h>
     #include <time.h>
-    #include "RTC.h" // [see](https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino)
+    #include "RTC.h"
   ``` 
-
+  [RTC library see](https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino)
+  
 ## Installation
 
 1. Clone or download this repository:
    ```bash
-   git clone https://github.com/your-username/presto-mqtt-display.git
+   git clone https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto.git
    ```
    Or download the ZIP file directly from GitHub.
 
@@ -68,9 +77,10 @@ The MQTT messages are published from an Arduino Uno R4 WiFi device that has conn
 
 ## Usage
 
-1. Connect your device to Wi-Fi. Ensure the Presto Display is properly connected and configured.
-2. The device will connect to the specified MQTT broker and subscribe to the defined topic.
-3. Incoming messages will be displayed on the screen for 20 seconds each. In the current state of this micropython sketch running on the Presto
+1. Connect both devices to Wi-Fi. Ensure the Presto device is properly connected and configured.
+2. The devices will connect to the specified MQTT broker. The presto as subscriber to the defined topic. The Uno R4 as publisher.
+3. Incoming messages will be displayed on the screen for 20 seconds each.
+   In the current state of this micropython sketch, running on the Presto,
    the following will be displayed:
    ```
    MQTT pub : UnoR4W
@@ -81,7 +91,7 @@ The MQTT messages are published from an Arduino Uno R4 WiFi device that has conn
    Altitude = 64.54 m
    Humidity = 49.63 %rH
    ```
-   The payload of the MQTT message also contains at the end a datetime string in the format "yyyy-mo-ddThh:mi:ss"
+   The payload of the MQTT message also contains a datetime string at the end in the format "yyyy-mo-ddThh:mi:ss"
 
 ## Example
 
@@ -121,14 +131,14 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 {
   "mqtt": {
     "broker": "5.196.78.28",
-	"port": "1883",
+    "port": "1883",
     "topic": "sensors/UnoR4W/ambient/#"
     "client_id":  "PrestoMQTTClient",
-	"publisher_id": "UnoR4W"
+    "publisher_id": "UnoR4W"
   },
   "wifi" : {
-	  "ssid" : "<Your WiFi SSID>",
-	  "pass" : "<Your WiFi Password>"
+    "ssid" : "<Your WiFi SSID>",
+    "pass" : "<Your WiFi Password>"
   }
 }
 ```
