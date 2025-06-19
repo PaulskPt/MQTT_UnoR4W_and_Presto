@@ -15,8 +15,8 @@ WIDTH, HEIGHT = display.get_bounds()
 
 BRIGHTNESS = 0.0 # The brightness of the LCD backlight (from 0.0 to 1.0)
 display.set_backlight(BRIGHTNESS)
-# Couple of colours for use later
 
+# Couple of colours for use later
 BLACK = display.create_pen(0, 0, 0)
 ORANGE = display.create_pen(255, 180, 0)
 BACKGROUND = display.create_pen(255, 250, 240)
@@ -126,7 +126,10 @@ def split_msg():
         
         n = tmp.find(":")
         if n >= 0:
-            tmp = tmp[:n] + " = " + tmp[n+1:]
+            if i == 5:
+                tmp = tmp[n+1:]  # slice-off the "msgID:"
+            else:
+                tmp = tmp[:n] + " = " + tmp[n+1:]        
             
         if i == 0:
             temp = tmp + " °C"
@@ -177,7 +180,7 @@ def draw(mode:int = 1):
     if publisher_time is not None:
         y += line_space
         display.text(publisher_time, x, y, WIDTH)
-        display.text(publisher_msgID, x+100, y, WIDTH)
+        display.text("msgID = "+ publisher_msgID, x+100, y, WIDTH)
     y += line_space * 2
     
     if mode == 0:
@@ -272,7 +275,7 @@ def main():
             # Refresh the display periodically
             if msg_rcvd:
                 split_msg()
-                print(f"Message {publisher_msgID} received")
+                print(f"MQTT message: {publisher_msgID} received")
                 draw(1) # Display the new message in mode "PaulskPt"
                 msg_rcvd = False
             elif time.time() - last_update_time > MESSAGE_DISPLAY_DURATION:
