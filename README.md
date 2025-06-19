@@ -1,11 +1,11 @@
 
 # MQTT Message Display on Presto Display
 
-Original version by: @digitalurban. [repo](https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py)
+Original version by: @digitalurban [repo](https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py)
 
-Modified version by: Paulus Schulinck (Github handle: @PaulskPt). [repo](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/tree/main)
+Modified version by: Paulus Schulinck (Github handle: @PaulskPt) [repo](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/tree/main)
 
-This repository contains Python code and Arduino C++ code designed to display messages received via MQTT on a [Pimoroni Presto device](https://shop.pimoroni.com/products/presto?variant=54894104019323).
+This repository contains MicroPython code and Arduino C++ code designed to display messages received via MQTT on a [Pimoroni Presto device](https://shop.pimoroni.com/products/presto?variant=54894104019323).
 The MQTT messages are published from an Arduino [Uno R4 WiFi](https://store.arduino.cc/products/uno-r4-wifi?srsltid=AfmBOoqFJln_4hqTS9kODV5BzuSx9C1apLP3kX2z5igzQhok9Gm-LYJ8)  device that has connected a Pimoroni BME280 [breakout](https://shop.pimoroni.com/products/bme280-breakout?variant=29420960677971) temperature, pressure and humidity sensor.
 
 
