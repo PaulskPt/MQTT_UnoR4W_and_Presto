@@ -279,7 +279,12 @@ def main():
                 draw(1)  # Refresh the screen with the current message
                 last_update_time = time.time()
         except Exception as e:
-            print(f"Error while waiting for MQTT messages: {e}")
+            if e.args[0] == 103:
+                print(f"Error ECONNABORTED")
+                raise RuntimeError
+            else:
+                print(f"Error while waiting for MQTT messages: {e}")
+                raise RuntimeError
         except KeyboardInterrupt as e:
             print(f"KeyboardInterrupt: exiting...")
             raise
