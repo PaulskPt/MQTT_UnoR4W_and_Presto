@@ -224,27 +224,16 @@ def setup():
         print(f"Subscribed to topic: \"{TOPIC.decode()}\"")
         msg_drawn = False
         
-        """
-        for i in range(topicsDb_len):
-            msg_drawn = False
-            # print(f"using TOPIC: {topicsDb[i]}")
-            TOPIC = topicsDb[i]
-            client.subscribe(TOPIC)
-            print(f"Subscribed to topic: \"{TOPIC.decode()}\"")
-            while not msg_drawn:
-                client.wait_msg()
-                time.sleep(1)
-            #client.unsubscribe()
-            print(f"unsubscribed from topic {TOPIC}")
-        """ 
         display.set_layer(0)
         display.set_pen(display.create_pen(0, 0, 0))  # Black background
         display.clear()
         presto.update()
         
-            
     except Exception as e:
         print(f"Failed to connect to MQTT broker: {e}")
+    except KeyboardInterrupt as e:
+        print(f"KeyboardInterrupt. Exiting...")
+        raise
 
 def main():
     global client, msg_rcvd, last_update_time, MSG_NR
