@@ -14,6 +14,8 @@
 #include "RTC.h" // See: https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino
 #include "secrets.h"
 
+bool my_debug = true;
+
 char sID[] = "UnoR4W";  // length 6 + 1
 unsigned long msgID = 0L;
 unsigned long msgID_max = 999L;
@@ -197,25 +199,50 @@ bool send_msg()
   strcat(msg, "}");
   strcat(msg, "\0");
 
-  //uint8_t le = sizeof(msg)/sizeof(msg[0]);
-  
-  uint8_t cnt = 0;
+  // Calculate topic length
+  uint8_t topic_cnt = 0;
+  for (uint8_t i = 0; topic[i] != '\0'; i++)
+  {
+    if (topic[i] != '\0')
+      topic_cnt++;
+  }
+  if (my_debug)
+  {
+    Serial.print(F("\nmsg topic   length = "));   // Note: Serial.printf("%3d", msgID) does not work with Serial UART
+    if (topic_cnt < 10) Serial.print("  ");       // Two spaces
+    else if (topic_cnt < 100) Serial.print(" ");  // One space
+    Serial.println(topic_cnt);
+  }
+  // Calculate payload length
+  uint8_t payload_cnt = 0;
   for (uint8_t i = 0; msg[i] != '\0'; i++)
   {
     if (msg[i] != '\0')
-      cnt++;
+      payload_cnt++;
   }
-  Serial.print(F("msg length = "));
-  Serial.println(cnt);
+  if (my_debug)
+  {
+    Serial.print(F("msg payload length = "));
+    if (payload_cnt < 10) Serial.print("  ");       // Two spaces
+    else if (payload_cnt < 100) Serial.print(" ");  // One space
+    Serial.println(payload_cnt);
+  }
 
   mqttClient.beginMessage(topic);
   mqttClient.print(msg);
   mqttClient.endMessage();
   
-  Serial.print(F("msg topic sent: "));
-  Serial.print(topic);
-  Serial.print(",\npayload: ");
-  Serial.println(msg);
+  if (my_debug)
+  {
+    Serial.print(F("Sent msg with msgID: "));
+    if (msgID < 10) Serial.print("  ");       // Two spaces
+    else if (msgID < 100) Serial.print(" ");  // One space
+    Serial.print(msgID);
+    Serial.print(F("\ntopic: "));
+    Serial.print(topic);
+    Serial.print(",\npayload: ");
+    Serial.println(msg);
+  }
   ret = true;
 
   return ret;
@@ -304,11 +331,16 @@ void setup() {
 void loop() 
 {
   //set interval for sending messages (milliseconds)
-  const long mqtt_interval_t = 60 * 1000; // 1 minute
-  unsigned long previousMillis = 0;
+  unsigned long mqtt_start_t = millis();
+  unsigned long mqtt_curr_t = 0L;
+  unsigned long mqtt_elapsed_t = 0L;
+  unsigned long mqtt_interval_t = 60 * 1000; // 1 minute
+
+  unsigned long ntp_start_t = mqtt_start_t;
+  unsigned long ntp_curr_t = 0L;
+  unsigned long ntp_elapsed_t = 0L;
+  unsigned long ntp_interval_t = 15 * 60 * 1000; // 15 minutes
   bool start = true;
-  unsigned long start_t = millis();
-  unsigned long elapsed_t = 0;
 
   RTCTime currentTime;
   
@@ -330,18 +362,21 @@ void loop()
     // avoids being disconnected by the broker
     mqttClient.poll();
 
-    unsigned long currentMillis = millis();
-    if (start || currentMillis - start_t >= ntp_interval_t)
+    unsigned long ntp_curr_t = millis();
+    ntp_elapsed_t = ntp_curr_t - ntp_start_t;
+    if (start || ntp_curr_t - ntp_start_t >= ntp_interval_t)
     {
-      start_t = currentMillis;
+      ntp_start_t = ntp_curr_t;
       rtc_sync();
     }
 
-    if (start || currentMillis - previousMillis >= mqtt_interval_t) 
+    mqtt_curr_t = millis();
+    mqtt_elapsed_t = mqtt_curr_t - mqtt_start_t;
+    if (start || mqtt_elapsed_t >= mqtt_interval_t) 
     {
       start = false;
       // save the last time a message was sent
-      previousMillis = currentMillis;
+      mqtt_start_t = mqtt_curr_t;
 
       uint8_t try_cnt = 0;
       uint8_t try_cnt_max = 10;
