@@ -101,7 +101,7 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
    the following will be displayed:
    ```
    MQTT pub : UnoR4W
-   hh:mi:ss   msgID = 47
+   14:18:16   msgID = 47
 
    Temperature = 27.11 °C
    Pressure = 1005.66 hPa
