@@ -105,9 +105,19 @@ bool connectToWiFi(){
   return ret;
 }
 
+void do_line()
+{
+  for (uint8_t i= 0; i < 4; i++)
+  {
+    Serial.print(F("----------"));
+  }
+  Serial.println();
+}
+
 void rtc_sync() 
 {
-  timeClient.update();
+  do_line();
+  timeClient.update();  // This prints also the text "Update from NTP Server"
 
   // Get the current date and time from an NTP server and convert
   // it to UTC +1 by passing the time zone offset in hours.
@@ -125,6 +135,7 @@ void rtc_sync()
   RTC.getTime(currentTime); 
   Serial.print(F("The RTC was just set to: "));
   Serial.println(String(currentTime));
+  do_line();
 }
 
 bool send_msg()
