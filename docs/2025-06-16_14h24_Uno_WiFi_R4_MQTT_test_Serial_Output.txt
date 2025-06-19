@@ -7,19 +7,19 @@ Sketch: Uno_WiFi_R4_MQTT_test.ino
 
 Serial Output:
 
-Attempting to connect to WPA SSID: "Vodafone-8D96F1"
-You're connected to the network: SSID: "Vodafone-8D96F1"
-MAC-address: 9C:B2:E8:FC:02:2C
+Attempting to connect to WPA SSID: "Vodafone-_____"
+You're connected to the network: SSID: "Vodafone-_____"
+MAC-address: __:__:__:__:__:__
 Signal strength (RSSI): -41
 Encryption Type: 2
 
-IP Address: 192.168.1.75
-MAC-address: 9C:B2:E8:FC:02:2C
+IP Address: 192.168._.__
+MAC-address: __:__:__:__:__:__
 Signal strength (RSSI): -40
 Encryption Type: 2
 
-IP Address: 192.168.1.75
-MAC address: DC:54:75:C3:D9:94
+IP Address: 192.168._.__
+MAC address: __:__:__:__:__:__
 Attempting to connect to the MQTT broker: test.mosquitto.org
 You're connected to the MQTT broker!
 
@@ -34,8 +34,8 @@ mqtt msg 4 = "sensors/PaulskPt_UnoR4WiFi/BME280_humidity/36.90"
 ----------------------------
 After some changest in the sketch for the Arduino Uno R5 WiFi:
 
-13:26:46.529 -> Connected to SSID: Vodafone-8D96F1
-13:26:46.529 -> IP Address: 192.168.1.75
+13:26:46.529 -> Connected to SSID: Vodafone-_____
+13:26:46.529 -> IP Address: 192.168._.__
 13:26:46.574 -> signal strength (RSSI):-50 dBm
 13:26:46.574 -> 
 13:26:46.574 -> Timezone offset = 1 hour(s)
@@ -91,8 +91,8 @@ publisher_msgID = msgID = 4
 ---------------------------------
 After some changes on: 2025-06-18 around 19h35 utc +1
 
-18:47:05.917 -> Connected to SSID: Vodafone-8D96F1
-18:47:05.917 -> IP Address: 192.168.1.75
+18:47:05.917 -> Connected to SSID: Vodafone-_____
+18:47:05.917 -> IP Address: 192.168._.__
 18:47:05.957 -> signal strength (RSSI):-40 dBm
 18:47:05.957 -> 
 18:47:05.957 -> Timezone offset = 1 hour(s)
@@ -239,8 +239,8 @@ Message nr 90 received
 Thursday 2025-06-19 12h44 utc +1
 After adding a MsgID at the end of the MQTT message.
 
-12:43:00.632 -> Connected to SSID: Vodafone-8D96F1
-12:43:00.670 -> IP Address: 192.168.1.75
+12:43:00.632 -> Connected to SSID: Vodafone-_____
+12:43:00.670 -> IP Address: 192.168._.__
 12:43:00.670 -> signal strength (RSSI):-51 dBm
 12:43:00.670 -> 
 12:43:00.670 -> Timezone offset = 1 hour(s)
@@ -363,8 +363,8 @@ Arduino Uno R4 WiFi sketch, after some changes: added global bool my_debug.
 Made Serial.print statements dependable of state of global bool my_debug.
 Changes some "line-up" in printing of info (e.g.: "msg topic length", "msg payload length" end "msgID".
 
-20:34:25.906 -> Connected to SSID: Vodafone-8D96F1
-20:34:25.946 -> IP Address: 192.168.1.75
+20:34:25.906 -> Connected to SSID: Vodafone-_____
+20:34:25.946 -> IP Address: 192.168._.__
 20:34:25.946 -> signal strength (RSSI):-56 dBm
 20:34:25.946 -> 
 20:34:25.946 -> Timezone offset = 1 hour(s)
@@ -389,9 +389,9 @@ Changes some "line-up" in printing of info (e.g.: "msg topic length", "msg paylo
 Arduino Uno R4 WiFi sketch, after adding one line space at start of print of each message sent,
 (the line containing: "msg topic   length =  ..."
 
-20:40:59.862 -> Attempting to connect to SSID: Vodafone-8D96F1
-20:41:09.923 -> Connected to SSID: Vodafone-8D96F1
-20:41:09.961 -> IP Address: 192.168.1.75
+20:40:59.862 -> Attempting to connect to SSID: Vodafone-_____
+20:41:09.923 -> Connected to SSID: Vodafone-_____
+20:41:09.961 -> IP Address: 192.168._.__
 20:41:09.961 -> signal strength (RSSI):-58 dBm
 20:41:10.007 -> 
 20:41:10.007 -> Timezone offset = 1 hour(s)
