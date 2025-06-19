@@ -39,6 +39,7 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
 
   - A Micropython IDE, e.g.: Thonny.
   - MicroPython firmware;
+  - Micropython script ```mqtt_presto.py```
   - `umqtt.simple` library for MQTT communication;
   - other libraries like: ujson.
   
