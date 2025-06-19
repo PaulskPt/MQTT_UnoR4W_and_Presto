@@ -6,10 +6,24 @@ import ujson
 import time
 from presto import Presto
 from umqtt.simple import MQTTClient
+
 # Setup for the Presto display
-presto = Presto()
+presto = presto = Presto(ambient_light=False)
 display = presto.display
 WIDTH, HEIGHT = display.get_bounds()
+
+BRIGHTNESS = 0.0 # The brightness of the LCD backlight (from 0.0 to 1.0)
+display.set_backlight(BRIGHTNESS)
+# Couple of colours for use later
+
+BLACK = display.create_pen(0, 0, 0)
+ORANGE = display.create_pen(255, 180, 0)
+BACKGROUND = display.create_pen(255, 250, 240)
+
+# We do a clear and update here to stop the screen showing whatever is in the buffer.
+display.set_pen(BLACK)
+display.clear()
+presto.update()
 
 my_debug = False
 
@@ -64,7 +78,7 @@ def mqtt_callback(topic, msg):
     # print(f"message_string = {message_string}")
     last_update_time = time.time()  # Reset the update timer
     if not my_debug:
-        print(f"Received message on topic {topic.decode()}, msg: {message_string}")
+        print(f"\nReceived message on topic {topic.decode()},\nmsg: {message_string}")
 
     if len(message_string) > 0:
         msg_rcvd = True
@@ -135,12 +149,12 @@ def draw(mode:int = 1):
     display.set_layer(1)
 
     # Clear the screen with a black background
-    display.set_pen(display.create_pen(0, 0, 0))  # Black background
+    display.set_pen(BLACK)  # Black background
     display.clear()
 
     # Display the message
     # See: https://doc-tft-espi.readthedocs.io/tft_espi/colors/
-    display.set_pen(display.create_pen(255, 180, 0))  # Orange text
+    display.set_pen(ORANGE)  # Orange text
     x = 10
     y = 25
     line_space = 30
@@ -259,7 +273,7 @@ def main():
             print(f"Error while waiting for MQTT messages: {e}")
         except KeyboardInterrupt as e:
             print(f"KeyboardInterrupt: exiting...")
-            sys.exit(0)
+            raise
             
 if __name__ == '__main__':
     main()
