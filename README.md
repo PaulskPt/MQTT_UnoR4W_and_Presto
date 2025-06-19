@@ -99,7 +99,7 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
 
 ## Example
 
-See the text file(s) with the log output in the folder ```docs```.
+See the text file(s) with the log output in the folder [logfile](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/blob/main/docs/2025-06-16_14h24_MQTT_test_Serial_Output.txt).
 
 ## Software functionalities of the Publisher device (Arduino Uno R4 WiFi):
 
