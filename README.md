@@ -56,6 +56,7 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
     #include <Wire.h>
     #include <time.h>
     #include "RTC.h"
+    #include "secret.h"
   ``` 
   [RTC library see](https://github.com/arduino/ArduinoCore-renesas/blob/main/libraries/RTC/examples/RTC_NTPSync/RTC_NTPSync.ino)
   
