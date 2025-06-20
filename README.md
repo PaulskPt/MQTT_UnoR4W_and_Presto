@@ -1,5 +1,5 @@
 
-# MQTT Messages Displayed on a Pimoroni Presto device
+# MQTT messages displayed on a Pimoroni Presto device
 
 Original version by: @digitalurban [repo](https://github.com/digitalurban/Presto_MQTT_Display/blob/main/mqtt_presto.py)
 
