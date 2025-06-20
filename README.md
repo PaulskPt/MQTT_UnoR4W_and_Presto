@@ -87,8 +87,6 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 3. If needed, customize the items in the file ```secret.json``` (defaults, see paragraph "Software functionalities" below)
 
-4. Run the code on your device.
-
 ## Usage
 
 1. Device 1 will start upon applying power or pushing the reset button.
