@@ -87,9 +87,9 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
    ```
    {
      "mqtt" : {
-       "broker" : "5.196.78.28",    "your-mqtt-broker-address" e.g.: "5.196.78.28" = test.mosquitto.org
+       "broker" : "5.196.78.28",    # "your-mqtt-broker-address" e.g.: "5.196.78.28" = test.mosquitto.org
        "port" : "1883",  # Port number
-       "topic : "sensors/UnoR4W/ambient/#" or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
+       "topic : "sensors/UnoR4W/ambient/#"  # or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
        "client_id" : "PrestoMQTTClient",
        "publisher_id" : "UnoR4W"
      },
@@ -99,6 +99,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
      }
   }
    ```
+  Note: The remarks in this representation of the secrets.json file are here for clarification. JSon syntax doesn't allow comments!
 
 4. Run the code on your device.
 
