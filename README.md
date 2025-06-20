@@ -83,7 +83,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 2. Upload the Micropython script and the file secret.json to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
 
-3. Customize the MQTT broker, port, and topic into the file ```secret.json``` (see below)
+3. Customize the MQTT broker, port, topic, client_id and publisher_id into the file ```secret.json``` (see below)
    ```python
    "broker" : "your-mqtt-broker-address" e.g.: "5.196.78.28" // test.mosquitto.org
    "port" : "1883"  # Port number
