@@ -85,9 +85,11 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 3. Customize the MQTT broker, port, and topic into the file ```secret.json``` (see below)
    ```python
-   BROKER = "your-mqtt-broker-address" e.g.: "5.196.78.28" // test.mosquitto.org
-   PORT = 1883  # Port number
-   TOPIC = b"your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
+   "broker" : "your-mqtt-broker-address" e.g.: "5.196.78.28" // test.mosquitto.org
+   "port" : "1883"  # Port number
+   "topic : "sensors/UnoR4W/ambient/#" or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
+   "client_id" : "PrestoMQTTClient",
+   "publisher_id" : "UnoR4W"
    ```
 
 4. Run the code on your device.
