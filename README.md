@@ -161,8 +161,11 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 }
 ```
 ## Debug info
-- If you want to see more log (Arduino IDE: Serial Monitor or Thonny IDE: Shell) output, set the ```my_debug``` to ```True```.
-  For device 1 in line 17. For device 2 in line 29.
+- If you want to see more log output (Arduino IDE: Serial Monitor or Thonny IDE: Shell), set the ```my_debug``` to:
+  ```
+  device 1, line 17: ```bool my_debug = true;```;
+  device 2, line 29: ```my_debug = True```
+  ```
 
 ## Suggestions (ToDo)
 - Add functionality to set, and with intervals, update the RTC of device 2 (Presto) using the datetime string received from device 1 (Uno R4 WiFi).
