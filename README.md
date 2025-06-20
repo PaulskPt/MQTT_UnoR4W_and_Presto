@@ -98,7 +98,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
        "ssid" : "<Your WiFi SSID>",
        "pass" : "<Your WiFi Password>"
      }
-  }
+   }
 
   Note: The remarks in this representation of the secrets.json file are here for clarification.
         JSon syntax doesn't allow comments!
