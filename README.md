@@ -29,9 +29,9 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 ## Requirements
 
 - **Hardware**:
-  - Pimoroni Presto device with a 4 inch square display;
-  - Arduino Uno R4 WiFi;
-  - Pimoroni BME280 breakout;
+  - Pimoroni Presto device with a 4 inch square display [details](https://shop.pimoroni.com/products/presto?variant=54894104019323);
+  - Arduino Uno R4 WiFi [details](https://store.arduino.cc/products/uno-r4-wifi?srsltid=AfmBOorz1WUvgkV5g0bJ7K10-pgHiDBGq3Fy6wc5KB5iB8YFUMf7pP0h);
+  - Pimoroni BME280 breakout [details](https://shop.pimoroni.com/products/bme280-breakout?variant=29420960677971);
   - StemmaQt/Qwiic [cable](https://www.adafruit.com/product/4210?srsltid=AfmBOop4XAzdxPfaLartPs8cdARyylU9Bc9dpsJzbvw9bjFX0x_Wen2O)
 
 - **Software**:
