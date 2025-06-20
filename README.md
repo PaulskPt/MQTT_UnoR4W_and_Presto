@@ -39,6 +39,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 - For device 1:
   - Arduino IDE v2.3.5;
   - Arduino sketch "Uno_WiFi_R4_MQTT_test.ino"
+  - secrets.h containing default data
   - The following Arduino libraries:
   ```
     #include <ArduinoMqttClient.h>
@@ -58,6 +59,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
   - A Micropython IDE, e.g.: Thonny.
   - Pimoroni's version of MicroPython for Presto: [firmware](https://github.com/pimoroni/presto/tree/main?tab=readme-ov-file#download-firmware);
   - Micropython script ```mqtt_presto.py```
+  - secrets.json containing default data
   - `umqtt.simple` library for MQTT communication;
   - other libraries like: ujson.
   
