@@ -22,7 +22,7 @@ The MQTT messages are published from an Arduino [Uno R4 WiFi](https://store.ardu
 ```
 Messages are shown in orange text on a black background.
 
-In this moment the time (hh:mi:ss), extracted from the received message, will be shown on the screen.
+In this moment the time (hh:mi:ss) and the msgID, both extracted from the received message, will be shown on the screen.
 ```
 - **Message Timing**: Ensures each message is displayed for at least 20 seconds.
 ```
