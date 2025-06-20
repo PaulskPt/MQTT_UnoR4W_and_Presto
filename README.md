@@ -83,13 +83,21 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 2. Upload the Micropython script and the file secret.json to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
 
-3. Customize the MQTT broker, port, topic, client_id and publisher_id into the file ```secret.json``` (see below)
-   ```python
-   "broker" : "your-mqtt-broker-address" e.g.: "5.196.78.28" // test.mosquitto.org
-   "port" : "1883"  # Port number
-   "topic : "sensors/UnoR4W/ambient/#" or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
-   "client_id" : "PrestoMQTTClient",
-   "publisher_id" : "UnoR4W"
+3. If needed, customize the items in the file ```secret.json``` (defaults, see below)
+   ```
+   {
+     "mqtt" : {
+       "broker" : "5.196.78.28",    "your-mqtt-broker-address" e.g.: "5.196.78.28" = test.mosquitto.org
+       "port" : "1883",  # Port number
+       "topic : "sensors/UnoR4W/ambient/#" or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
+       "client_id" : "PrestoMQTTClient",
+       "publisher_id" : "UnoR4W"
+     },
+     "wifi" : {
+       "ssid" : "<Your WiFi SSID>",
+       "pass" : "<Your WiFi Password>"
+     }
+  }
    ```
 
 4. Run the code on your device.
