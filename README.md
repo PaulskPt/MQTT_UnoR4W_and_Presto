@@ -106,7 +106,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
    Altitude = 64.54 m
    Humidity = 49.63 %rH
    ```
-   The payload of the MQTT message also contains a datetime string at the end in the format "yyyy-mo-ddThh:mi:ss"
+   The payload of the MQTT message contains a datetime string and a msgID at the end in the format (e.g.:) "datetime":"2025-06-20T11:56:34" and "msgID":"125".
 
 ## Example
 
