@@ -161,7 +161,7 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 }
 ```
 ## Debug info
-- If you want to see more log output (Arduino IDE: Serial Monitor or Thonny IDE: Shell), set the ```my_debug``` to:
+- If you want to see more log output (Arduino IDE: Serial Monitor or Thonny IDE: Shell), set variable ```my_debug``` to:
   ```
   device 1, line 17: ```bool my_debug = true;```;
   device 2, line 29: ```my_debug = True```
