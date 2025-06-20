@@ -87,7 +87,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 3. If needed, customize the items in the file ```secret.json``` (defaults, see paragraph "Software functionalities" below)
 
-After the installation of each device has been successful, you can disconnected the devices from your pc. Then power each device from a 5 Volt DC source or a battery.
+After the installation of each device has been successful, you can disconnect the devices from your pc. Then power each device from a 5 Volt DC source or a battery.
 
 ## Usage
 
