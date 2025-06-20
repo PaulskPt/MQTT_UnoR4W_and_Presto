@@ -85,26 +85,7 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 2. Upload the Micropython script and the file secret.json to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
 
-3. If needed, customize the items in the file ```secret.json``` (defaults, see below)
-
-```
-   {
-     "mqtt" : {
-       "broker" : "5.196.78.28",    # "your-mqtt-broker-address" e.g.: "5.196.78.28" = test.mosquitto.org
-       "port" : "1883",  # Port number
-       "topic : "sensors/UnoR4W/ambient/#"  # or "your/topic/#"  # MQTT topic. The topic has to be equal to the topic used in the Arduino R4 WiFi device.
-       "client_id" : "PrestoMQTTClient",
-       "publisher_id" : "UnoR4W"
-     },
-     "wifi" : {
-       "ssid" : "<Your WiFi SSID>",
-       "pass" : "<Your WiFi Password>"
-     }
-   }
-
-  Note: The remarks in this representation of the secrets.json file are here for clarification.
-        JSon syntax doesn't allow comments!
-```
+3. If needed, customize the items in the file ```secret.json``` (defaults, see paragraph "Software functionalities" below)
 
 4. Run the code on your device.
 
@@ -133,7 +114,8 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 See the text file(s) with the log output in the folder [logfile](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/blob/main/docs/2025-06-16_14h24_MQTT_test_Serial_Output.txt).
 
-## Software functionalities of the Publisher device (Arduino Uno R4 WiFi):
+## Software functionalities:
+- Device 1:
 
 To get the sketch running in the Arduino Uno R4 Wifi you need to fill-in the following variables in the file ```secrets.h```:
 
@@ -161,6 +143,8 @@ The NTPClient will be set with a utc-offset with can be changed in the file secr
 NTPClient timeClient(ntpUDP, SECRET_NTP_SERVER1, utc_offset, ntp_interval_t);  // line 38
 ```
 
+- Device 2:
+  
 To get the micropython script in the Pimoroni Presto running you need to fill-in the following valiables in the file ´´´secrets.json´´´
 
 ```
