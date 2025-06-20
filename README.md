@@ -94,9 +94,12 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
 
 ## Usage
 
-1. Both devices will connect to the Wi-Fi access point of your choice. For the Presto device, if needed, see the guide [EzWiFi](https://github.com/pimoroni/presto/blob/main/docs/wifi.md)
-2. Both devices will connect to the specified MQTT broker. The Uno R4 WiFi as publisher. The Presto as subscriber to the defined topic.
-3. Incoming messages will be displayed on the screen for 20 seconds each.
+1. Device 1 will start upon applying power or pushing the reset button.
+2. On device 2 you have to swipe until the "Mqtt Presto" logo appears in front. Then tap this icon.
+   See: [Mqtt Presto](https://imgur.com/a/xOUvd57)
+3. Both devices will connect to the Wi-Fi access point of your choice. For the Presto device, if needed, see the guide [EzWiFi](https://github.com/pimoroni/presto/blob/main/docs/wifi.md)
+4. Both devices will connect to the specified MQTT broker. The Uno R4 WiFi as publisher. The Presto as subscriber to the defined topic.
+5. Incoming messages will be displayed on the screen for 20 seconds each.
    In the current state of this micropython sketch, running on the Presto,
    the following will be displayed:
    ```
@@ -161,9 +164,6 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 ```
 ## Debug info
 - If you want to see more log (serial monitor or shell) output, set the ```my_debug``` (line 29) to ```True```.
-
-## Startup icon and video
-[Mqtt Presto](https://imgur.com/a/xOUvd57)
 
 ## Suggestions (ToDo)
 - Add functionality to set, and with intervals, update the RTC of device 2 (Presto) using the datetime string received from device 1 (Uno R4 WiFi).
