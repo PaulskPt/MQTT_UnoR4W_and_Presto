@@ -262,7 +262,8 @@ def setup():
         print(f"KeyboardInterrupt. Exiting...")
         raise
 
-
+# Here begins the "main()" part:
+# for compatibility with the Presto "system" the line "def main()" has been removed
 setup()
 draw(0) # Ensure the default message "Waiting for Messages..." is displayed
 
@@ -290,3 +291,7 @@ while True:
     except KeyboardInterrupt as e:
         print(f"KeyboardInterrupt: exiting...")
         raise
+
+# for compatibility with the Presto "system" the next two lines have been commented out
+# if __name__ == '__main__':
+#   main()
