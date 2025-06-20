@@ -171,6 +171,7 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 
 ## Suggestions (ToDo)
 - Add functionality to set, and with intervals, update the RTC of device 2 (Presto) using the datetime string received from device 1 (Uno R4 WiFi).
+- Save the received MQTT messsage data to a spreadsheet for analisys purposes.
 
 ## Contributing
 
