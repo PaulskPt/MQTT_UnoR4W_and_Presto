@@ -262,35 +262,31 @@ def setup():
         print(f"KeyboardInterrupt. Exiting...")
         raise
 
-def main():
-    global client, msg_rcvd, last_update_time, publisher_msgID
-    setup()
-    draw(0) # Ensure the default message "Waiting for Messages..." is displayed
-    
-    while True:
-        try:
-            # Wait for MQTT messages (non-blocking check)
-            client.check_msg()
 
-            # Refresh the display periodically
-            if msg_rcvd:
-                split_msg()
-                print(f"MQTT message: {publisher_msgID} received")
-                draw(1) # Display the new message in mode "PaulskPt"
-                msg_rcvd = False
-            elif time.time() - last_update_time > MESSAGE_DISPLAY_DURATION:
-                draw(1)  # Refresh the screen with the current message
-                last_update_time = time.time()
-        except Exception as e:
-            if e.args[0] == 103:
-                print(f"Error ECONNABORTED")
-                raise RuntimeError
-            else:
-                print(f"Error while waiting for MQTT messages: {e}")
-                raise RuntimeError
-        except KeyboardInterrupt as e:
-            print(f"KeyboardInterrupt: exiting...")
-            raise
-            
-if __name__ == '__main__':
-    main()
+setup()
+draw(0) # Ensure the default message "Waiting for Messages..." is displayed
+
+while True:
+    try:
+        # Wait for MQTT messages (non-blocking check)
+        client.check_msg()
+
+        # Refresh the display periodically
+        if msg_rcvd:
+            split_msg()
+            print(f"MQTT message: {publisher_msgID} received")
+            draw(1) # Display the new message in mode "PaulskPt"
+            msg_rcvd = False
+        elif time.time() - last_update_time > MESSAGE_DISPLAY_DURATION:
+            draw(1)  # Refresh the screen with the current message
+            last_update_time = time.time()
+    except Exception as e:
+        if e.args[0] == 103:
+            print(f"Error ECONNABORTED")
+            raise RuntimeError
+        else:
+            print(f"Error while waiting for MQTT messages: {e}")
+            raise RuntimeError
+    except KeyboardInterrupt as e:
+        print(f"KeyboardInterrupt: exiting...")
+        raise
