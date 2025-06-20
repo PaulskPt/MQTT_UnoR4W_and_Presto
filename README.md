@@ -99,9 +99,9 @@ In this moment the time (hh:mi:ss), extracted from the received message, will be
    See: [Mqtt Presto](https://imgur.com/a/xOUvd57)
 3. Both devices will connect to the Wi-Fi access point of your choice. For the Presto device, if needed, see the guide [EzWiFi](https://github.com/pimoroni/presto/blob/main/docs/wifi.md)
 4. Both devices will connect to the specified MQTT broker. The Uno R4 WiFi as publisher. The Presto as subscriber to the defined topic.
-5. Incoming messages will be displayed on the screen for 20 seconds each.
+5. Incoming messages will be displayed on the screen of the Presto for 20 seconds each.
    In the current state of this micropython sketch, running on the Presto,
-   the following will be displayed:
+   the following information will be displayed:
    ```
    MQTT pub : UnoR4W
    14:18:16   msgID = 47
