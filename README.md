@@ -84,7 +84,8 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 2. Upload the Micropython script and the file secret.json to your device using a tool like [Thonny](https://thonny.org/), [ampy](https://github.com/scientifichackers/ampy), or [rshell](https://github.com/dhylands/rshell).
 
 3. If needed, customize the items in the file ```secret.json``` (defaults, see below)
-   ```
+
+```
    {
      "mqtt" : {
        "broker" : "5.196.78.28",    # "your-mqtt-broker-address" e.g.: "5.196.78.28" = test.mosquitto.org
@@ -98,8 +99,10 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
        "pass" : "<Your WiFi Password>"
      }
   }
-   ```
-  Note: The remarks in this representation of the secrets.json file are here for clarification. JSon syntax doesn't allow comments!
+
+  Note: The remarks in this representation of the secrets.json file are here for clarification.
+        JSon syntax doesn't allow comments!
+```
 
 4. Run the code on your device.
 
