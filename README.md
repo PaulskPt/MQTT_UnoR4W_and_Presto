@@ -87,6 +87,8 @@ In this moment the time (hh:mi:ss) and the msgID, both extracted from the receiv
 
 3. If needed, customize the items in the file ```secret.json``` (defaults, see paragraph "Software functionalities" below)
 
+After the installation in both devices has been successful, you can disconnected the devices from your pc. Then power each of the devices from a 5Volt DC source or a battery.
+
 ## Usage
 
 1. Device 1 will start upon applying power or pushing the reset button.
