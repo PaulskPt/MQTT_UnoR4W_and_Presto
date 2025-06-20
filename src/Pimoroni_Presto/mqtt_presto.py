@@ -263,7 +263,9 @@ def setup():
         raise
 
 # Here begins the "main()" part:
-# for compatibility with the Presto "system" the line "def main()" has been removed
+# def main():
+# global client, msg_rcvd, last_update_time, publisher_msgID
+# for compatibility with the Presto "system" the line "def main()" and below it the "globals" line have been removed
 setup()
 draw(0) # Ensure the default message "Waiting for Messages..." is displayed
 
