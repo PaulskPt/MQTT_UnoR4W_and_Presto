@@ -112,7 +112,7 @@ After the installation of each device has been successful, you can disconnect th
 
 ## Example
 
-See the text file(s) with the log output in the folder [logfile](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/blob/main/docs/mqtt_log_2025-06-22T224329.txt).
+See the text file(s) with the log output in the folder [logfile](https://github.com/PaulskPt/MQTT_UnoR4W_and_Presto/tree/main/docs).
 
 ## Software functionalities:
 - Device 1:
