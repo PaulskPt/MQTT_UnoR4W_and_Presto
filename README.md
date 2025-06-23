@@ -177,6 +177,11 @@ Older logfiles on the SD-Card will be deleted.
 At each loop and passing of the function ```send_msg()``` the algorithm will check if the size of the logfil has passed a limit set.
 If so, a new empty log will be created. See an example of this below:
 ```
+[...]
+loop(): MQTT message:  72 received
+loop(): MQTT message:  73 received
+loop(): MQTT message:  74 received
+loop(): MQTT message:  75 received
 rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
 rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 5130 bytes. Max size is: 5120
 create_logfile(): created new log file: "mqtt_log_2025-06-23T172345.txt"
