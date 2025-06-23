@@ -100,7 +100,7 @@ bool connectToWiFi(){
 
   // attempt to connect to WiFi network:
   while (wifiStatus != WL_CONNECTED) {
-    serialPrintf(PSTR("Attempting to connect to SSID: %s\n"), WiFi.SSID());
+    serialPrintf(PSTR("Attempting to connect to SSID: %s\n"), ssid);
     // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
     wifiStatus = WiFi.begin(ssid, pass);
 
@@ -395,18 +395,14 @@ void setup() {
       while (1) delay(10);
   }
 
-  Serial.print(F("\nAttempting to connect to the MQTT broker: "));
-  Serial.print(broker);
-  Serial.print(":");
-  Serial.println(port);
+  serialPrintf(PSTR("\nAttempting to connect to the MQTT broker: %s:%s\n"), broker, String(port).c_str());
 
   bool mqtt_connected = false;
   for (uint8_t i=0; i < 10; i++)
   {
     if (!mqttClient.connect(broker, port))
     {
-      Serial.print(F("MQTT connection failed! Error code = "));
-      Serial.println(mqttClient.connectError());
+      serialPrintf(PSTR("MQTT connection failed! Error code = %s\n"), String(mqttClient.connectError()).c_str());
       delay(1000);
     }
     else
