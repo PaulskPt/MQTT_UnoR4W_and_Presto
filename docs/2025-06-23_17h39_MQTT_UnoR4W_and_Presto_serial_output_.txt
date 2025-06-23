@@ -1,0 +1,115 @@
+Monday 2025-06-23 17h30 utc +1
+
+MQTT messages test:
+
+Device 1: Arduino Uno 4R WiFi
+MQTT role: publisher
+
+Device 2: Pimoroni Presto
+MQTT role: subscriber
+
+MQTT topic: "sensor/UnoR4W/ambient/#"
+
+
+Note: because the MS Windows system does not allow ":" in a filename, we changed the filename structure of the
+log filenames from "mqtt_log_2025-06-23T17:13:46.txt"  into: "mqtt_log_2025-06-23T171346.txt"
+
+Log publisher:
+
+After many changes in the Arduino sketch, the output of the Arduino sketch is:
+
+Connected to SSID: Vodafone-_____
+IP Address: 192.168._.__
+signal strength (RSSI): -39 dBm
+
+Timezone offset = 1 hour(s)
+Starting connection to NTP server...
+
+Attempting to connect to the MQTT broker: 5.196.78.28:1883
+You're connected to the MQTT broker!
+
+board ID = "UnoR4W"
+loop(): MQTT message send interval = 1 minute
+--------------------------------------------
+Update from NTP Server
+NTP Unix time = 1750697927
+The RTC was just set to: 2025-06-23T16:58:47
+--------------------------------------------
+MQTT message:   1 sent
+MQTT message:   2 sent
+MQTT message:   3 sent
+MQTT message:   4 sent
+MQTT message:   5 sent
+MQTT message:   6 sent
+MQTT message:   7 sent
+MQTT message:   8 sent
+MQTT message:   9 sent
+MQTT message:  10 sent
+MQTT message:  11 sent
+MQTT message:  12 sent
+MQTT message:  13 sent
+MQTT message:  14 sent
+MQTT message:  15 sent
+--------------------------------------------
+NTP Unix time = 1750698826
+The RTC was just set to: 2025-06-23T17:13:46
+--------------------------------------------
+MQTT message:  16 sent
+MQTT message:  17 sent
+MQTT message:  18 sent
+MQTT message:  19 sent
+MQTT message:  20 sent
+MQTT message:  21 sent
+MQTT message:  22 sent
+MQTT message:  23 sent
+MQTT message:  24 sent
+MQTT message:  25 sent
+MQTT message:  26 sent
+MQTT message:  27 sent
+MQTT message:  28 sent
+MQTT message:  29 sent
+MQTT message:  30 sent
+--------------------------------------------
+Update from NTP Server
+NTP Unix time = 1750699729
+The RTC was just set to: 2025-06-23T17:28:49
+--------------------------------------------
+MQTT message:  31 sent
+MQTT message:  32 sent
+MQTT message:  33 sent
+MQTT message:  34 sent
+-------------------------------------------------------------------------------
+
+After varios changes in the MPY script, the output of the MPY script is:
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+   01) mqtt_log_2025-06-23T172345.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-23T172345.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-23T172345.txt" exists in in the directory:"/sd/"
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
+rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 466 bytes. Max size is: 5120
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+   mqtt_log_2025-06-23T172345.txt
+   mqtt_log_2025-06-23T17:23:45.txt
+--------------------------------------------------
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+del_logfiles(): log_dir = /sd/
+del_logfiles(): log_pfx = mqtt_log_2025-06
+del_logfiles(): We're not deleting the current logfile: "mqtt_log_2025-06-23T172345.txt"
+del_logfiles(): Deleted files:
+  ✔ mqtt_log_2025-06-23T17:23:45.txt
+del_logfiles(): check ref file: "mqtt_latest_log_fn.txt" after making empty. Size: 0 bytes
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message:  32 received
+loop(): MQTT message:  33 received
+
+------------------------------------------
