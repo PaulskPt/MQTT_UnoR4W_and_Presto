@@ -183,7 +183,7 @@ loop(): MQTT message:  73 received
 loop(): MQTT message:  74 received
 loop(): MQTT message:  75 received
 rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
-rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 5130 bytes. Max size is: 5120
+rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 5130 bytes. Max size is: 5120 bytes.
 create_logfile(): created new log file: "mqtt_log_2025-06-23T172345.txt"
 create_logfile(): check: new log file: "mqtt_log_2025-06-23T172345.txt" exists
 create_logfile(): added to ref file: "mqtt_latest_log_fn.txt" active log filename "mqtt_log_2025-06-23T172345.txt"
@@ -201,6 +201,47 @@ Traceback (most recent call last):
   File "<stdin>", line 706, in <module>
 KeyboardInterrupt:
 ```
+
+After the ```stop``` button of the Thonny IDE has been pressed, the MicroPython script will print the contents of the active log file, as shown below:
+```
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message:  90 received
+loop(): MQTT message:  91 received
+loop(): MQTT message:  92 received
+
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+loop(): KeyboardInterrupt: exiting...
+
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+   01) mqtt_log_2025-06-23T172345.txt
+--------------------------------------------------
+Size of log file: 1102. Max log file size can be: 5120 bytes
+Contents of log file: "/sd/mqtt_log_2025-06-23T172345.txt"
+---Log created on: 2025-06-23T18:13:52---
+
+{Temperature:27.53,Pressure:1001.65,Altitude:97.05,Humidity:45.02,datetime:2025-06-23T18:13:50,msgID:76}
+{Temperature:27.56,Pressure:1001.63,Altitude:97.18,Humidity:44.95,datetime:2025-06-23T18:14:52,msgID:77}
+{Temperature:27.54,Pressure:1001.57,Altitude:97.69,Humidity:44.97,datetime:2025-06-23T18:15:53,msgID:78}
+{Temperature:27.51,Pressure:1001.65,Altitude:96.99,Humidity:44.98,datetime:2025-06-23T18:16:54,msgID:79}
+{Temperature:27.50,Pressure:1001.72,Altitude:96.46,Humidity:44.95,datetime:2025-06-23T18:17:55,msgID:80}
+{Temperature:27.53,Pressure:1001.69,Altitude:96.73,Humidity:44.93,datetime:2025-06-23T18:18:56,msgID:81}
+{Temperature:27.55,Pressure:1001.67,Altitude:96.88,Humidity:44.89,datetime:2025-06-23T18:19:57,msgID:82}
+{Temperature:27.54,Pressure:1001.67,Altitude:96.73,Humidity:44.72,datetime:2025-06-23T18:28:07,msgID:90}
+{Temperature:27.57,Pressure:1001.70,Altitude:96.60,Humidity:44.59,datetime:2025-06-23T18:28:54,msgID:91}
+{Temperature:27.54,Pressure:1001.66,Altitude:96.93,Humidity:44.62,datetime:2025-06-23T18:29:55,msgID:92}
+--------------------------------------------------
+Traceback (most recent call last):
+  File "<stdin>", line 699, in <module>
+KeyboardInterrupt: 
+
+MPY: soft reboot
+MicroPython feature/presto-wireless-2025,   on 2025-03-21; Presto with RP2350
+
+Type "help()" for more information.
+
+>>>
+```
+
 
 The structure of the payload of the mqtt messages used in this project is:
 ```
