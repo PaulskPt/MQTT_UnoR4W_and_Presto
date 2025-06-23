@@ -174,6 +174,29 @@ At the moment the script is stopped, either by pressing the "stop" button in the
 the contents of the active log file will be printed to the shell (serial output).
 Older logfiles on the SD-Card will be deleted.
 
+At each loop and passing of the function ```send_msg()``` the algorithm will check if the size of the logfil has passed a limit set.
+If so, a new empty log will be created. See an example of this below:
+```
+rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
+rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 5130 bytes. Max size is: 5120
+create_logfile(): created new log file: "mqtt_log_2025-06-23T172345.txt"
+create_logfile(): check: new log file: "mqtt_log_2025-06-23T172345.txt" exists
+create_logfile(): added to ref file: "mqtt_latest_log_fn.txt" active log filename "mqtt_log_2025-06-23T172345.txt"
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+   01) mqtt_log_2025-06-23T172345.txt
+--------------------------------------------------
+loop(): MQTT message:  76 received
+loop(): MQTT message:  77 received
+loop(): MQTT message:  78 received
+loop(): MQTT message:  79 received
+loop(): MQTT message:  80 received
+loop(): MQTT message:  81 received
+loop(): MQTT message:  82 received
+Traceback (most recent call last):
+  File "<stdin>", line 706, in <module>
+KeyboardInterrupt:
+```
+
 The structure of the payload of the mqtt messages used in this project is:
 ```
      {Temperature:27.66,Pressure:1002.06,Altitude:93.59,Humidity:45.57,datetime:2025-06-23T16:58:47,msgID:1}
