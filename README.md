@@ -173,6 +173,11 @@ At the moment the script is stopped, either by pressing the "stop" button in the
 the contents of the active log file will be printed to the shell (serial output).
 Older logfiles on the SD-Card will be deleted.
 
+The structure of the payload of the mqtt messages used in this project is:
+```
+     {Temperature:27.66,Pressure:1002.06,Altitude:93.59,Humidity:45.57,datetime:2025-06-23T16:58:47,msgID:1}
+```
+
 ## Debug info
 - If you want to see more log output (Arduino IDE: Serial Monitor or Thonny IDE: Shell), set variable ```my_debug``` to:
   ```
