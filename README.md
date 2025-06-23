@@ -163,13 +163,14 @@ To get the micropython script in the Pimoroni Presto running you need to fill-in
 }
 ```
 Update 2025-06-23:
-After booting up or a reset device #2 will try to open on the SD-Card a file with the name: "mqtt_latest_log.txt".
-If found, the script will check if this file contains the name of the most recent used log file, e.g.: "mqtt_log_2025-06-22T130731.txt"
+
+After booting up or a reset device #2 will try to open on the SD-Card a file in the directory: ```/sd``` with the name: ```mqtt_latest_log.txt```.
+If found, the script will check if this file contains the name of the most recent used log file, e.g.: ```mqtt_log_2025-06-22T130731.txt```
 If the name of a log file is found in the file "mqtt_latest_log.txt", the script will try to open this log file.
 If the file "mqtt_latest_log.txt" does not exist, it will be created.
 If no log filename is found in the file "mqtt_latest_log.txt", it will be created.
 When a MQTT message is received from the publisher, the payload of this message will be saved in the log file.
-At the moment the script is stopped, either by pressing the "stop" button in the Thonny IDE, or pressing the key-combo <Ctrl+C>,
+At the moment the script is stopped, either by pressing the "stop" button in the Thonny IDE, or pressing the key-combo ```<Ctrl+C>```,
 the contents of the active log file will be printed to the shell (serial output).
 Older logfiles on the SD-Card will be deleted.
 
