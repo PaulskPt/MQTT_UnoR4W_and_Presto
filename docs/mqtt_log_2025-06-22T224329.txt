@@ -1,0 +1,9 @@
+---Log created on: 2025-06-23T16:54:07---
+
+ {Temperature:27.66,Pressure:1002.06,Altitude:93.59,Humidity:45.57,datetime:2025-06-23T16:58:47,msgID:1}
+ {Temperature:27.64,Pressure:1002.03,Altitude:93.82,Humidity:45.59,datetime:2025-06-23T16:59:49,msgID:2}
+ {Temperature:27.66,Pressure:1002.01,Altitude:93.98,Humidity:45.59,datetime:2025-06-23T17:00:50,msgID:3}
+ {Temperature:27.66,Pressure:1002.12,Altitude:93.07,Humidity:45.54,datetime:2025-06-23T17:01:51,msgID:4}
+ {Temperature:27.66,Pressure:1002.08,Altitude:93.42,Humidity:45.57,datetime:2025-06-23T17:02:52,msgID:5}
+ {Temperature:27.66,Pressure:1002.02,Altitude:93.91,Humidity:45.60,datetime:2025-06-23T17:03:53,msgID:6}
+ {Temperature:27.69,Pressure:1002.01,Altitude:94.02,Humidity:45.55,datetime:2025-06-23T17:04:55,msgID:7}
