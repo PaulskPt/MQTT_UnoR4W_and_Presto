@@ -113,3 +113,280 @@ loop(): MQTT message:  32 received
 loop(): MQTT message:  33 received
 
 ------------------------------------------
+
+After many changes in function rotate_log_if_needed(), the output is now:
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+   01) mqtt_log_2025-06-23T172345.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-23T172345.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-23T172345.txt" exists in in the directory:"/sd/"
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
+rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 1102 bytes. Max size is: 5120 bytes.
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+   mqtt_log_2025-06-23T172345.txt
+--------------------------------------------------
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+del_logfiles(): log_dir = /sd/
+del_logfiles(): log_pfx = mqtt_log_2025-06
+del_logfiles(): We're not deleting the current logfile: "mqtt_log_2025-06-23T172345.txt"
+del_logfiles(): no logfile(s) found starting with "mqtt_log_2025-06" and ending with ".txt"
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message: 111 received
+loop(): MQTT message: 112 received
+
+-------------------------------
+Tuesday 2025-06-24 00h10 utc +1
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+pr_ref():  01) mqtt_log_2025-06-23T204712.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-23T204712.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-23T204712.txt" exists in in the directory:"/sd/"
+main(): reference file: "mqtt_latest_log_fn.txt" is empty, creating a new log file
+new_logname() = mqtt_log_2025-06-24T000937.txt
+create_logfile(): created new log file: "mqtt_log_2025-06-24T000937.txt"
+create_logfile(): check: new log file: "mqtt_log_2025-06-24T000937.txt" exists
+create_logfile(): added to ref file: "mqtt_latest_log_fn.txt" the new active log filename "mqtt_log_2025-06-24T000937.txt"
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+pr_ref():  01) mqtt_log_2025-06-24T000937.txt
+--------------------------------------------------
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+ 1) mqtt_log_2025-06-23T200908.txt, size 21573 bytes
+ 2) mqtt_log_2025-06-23T204712.txt, size 42 bytes
+ 3) mqtt_log_2025-06-24T000937.txt, size 42 bytes
+--------------------------------------------------
+list_logfiles(): Total number of log files found: 3
+--------------------------------------------------
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message: 256 received
+
+
+-----------------------------------------
+After some changes in the MPY script for the Pimoroni Presto:
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+pr_ref():  01) mqtt_log_2025-06-24T000937.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-24T000937.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-24T000937.txt" exists in in the directory:"/sd/"
+get_active_log_filename(): Active log file size: 1632 bytes
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+ 1) mqtt_log_2025-06-23T200908.txt, size 21573 bytes
+ 2) mqtt_log_2025-06-23T204712.txt, size 996 bytes
+ 3) mqtt_log_2025-06-24T000937.txt, size 1632 bytes
+--------------------------------------------------
+list_logfiles(): Total number of log files found: 3
+--------------------------------------------------
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message: 283 received
+loop(): MQTT message: 284 received
+
+------------------------------------
+And the output of the Publisher device (Arduino Uno R4 WiFi)
+
+Attempting to connect to SSID: Vodafone-8D96F1
+Connected to SSID: Vodafone-8D96F1
+IP Address: 192.168.1.75
+signal strength (RSSI): -39 dBm
+
+Timezone offset = 1 hour(s)
+Starting connection to NTP server...
+
+Attempting to connect to the MQTT broker: 5.196.78.28:1883
+You're connected to the MQTT broker!
+
+board ID = "UnoR4W"
+loop(): MQTT message send interval = 1 minute
+--------------------------------------------
+Update from NTP Server
+NTP Unix time = 1750725573
+The RTC was just set to: 2025-06-24T00:39:33
+--------------------------------------------
+MQTT message:   1 sent
+MQTT message:   2 sent
+MQTT message:   3 sent
+MQTT message:   4 sent
+MQTT message:   5 sent
+MQTT message:   6 sent
+
+
+
+----------------------------------------------------
+Tuesday 2025-06-24 06h53
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+pr_ref():  01) mqtt_log_2025-06-24T020539.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-24T020539.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-24T020539.txt" exists in in the directory:"/sd/"
+get_active_log_filename(): Active log file size: 42 bytes
+main(): Active log file: "mqtt_log_2025-06-24T020539.txt" does exist in the directory: "/sd/"
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+ 1) mqtt_log_2025-06-23T200908.txt, size 21573 bytes
+ 2) mqtt_log_2025-06-23T204712.txt, size 996 bytes
+ 3) mqtt_log_2025-06-24T000937.txt, size 5863 bytes
+ 4) mqtt_log_2025-06-24T011035.txt, size 35184 bytes  <<<=== This log had all messages until nr 364 of 06h45
+ 5) mqtt_log_2025-06-24T020539.txt, size 42 bytes     <<<=== so, I don't understand why there was this log, which is empty.
+--------------------------------------------------           I switched off my desktop PC at 01h45. Seeing the size of the
+list_logfiles(): Total number of log files found: 5          log 4) with 35184 bytes, is way over the limit of 5 kbytes.
+--------------------------------------------------           It seems that at each loop the log size is not checked!
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+
+-------------------------
+After adding elapsed_t calculations and setting interval_t to 5 x 60 seconds = 5 minutes to call rotate_log_if_needed()  
+the output is as follows:
+
+[...]
+loop(): elapsed_t = 230.00 seconds
+loop(): elapsed_t = 240.00 seconds
+loop(): elapsed_t = 250.00 seconds
+loop(): MQTT message: 423 received
+loop(): elapsed_t = 260.00 seconds
+loop(): elapsed_t = 270.00 seconds
+loop(): elapsed_t = 280.00 seconds
+loop(): elapsed_t = 290.00 seconds
+loop(): elapsed_t = 300.00 seconds
+rotate_log_if_needed(): rotate log file not needed yet  <<<== The call to rotate_log_if_needed()
+loop(): elapsed_t = 0.00 seconds
+loop(): elapsed_t = 10.00 seconds
+loop(): MQTT message: 424 received
+loop(): elapsed_t = 20.00 seconds
+loop(): elapsed_t = 30.00 seconds
+loop(): elapsed_t = 40.00 seconds
+loop(): elapsed_t = 50.00 seconds
+[...]
+
+------------------------------------
+After switching off the elapsed_t 10.00 secs text, the output is as follows:
+
+>>> %Run -c $EDITOR_CONTENT
+
+MPY: soft reboot
+main(): ref file: "mqtt_latest_log_fn.txt" exists. Size: 30 bytes
+pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
+pr_ref():  01) mqtt_log_2025-06-24T020539.txt
+--------------------------------------------------
+main(): Number of log files listed in reference file: 1
+get_active_log_filename(): Active log filename read from reference file: "mqtt_log_2025-06-24T020539.txt"
+get_active_log_filename(): Active log file: "mqtt_log_2025-06-24T020539.txt" exists in in the directory:"/sd/"
+get_active_log_filename(): Active log file size: 5713 bytes
+main(): Active log file: "mqtt_log_2025-06-24T020539.txt" does exist in the directory: "/sd/"
+main(): Connecting to WiFi...
+main(): WiFi connected.
+rotate_log_if_needed(): rotate log file not needed yet
+list_logfiles(): MQTT log files:
+ 1) mqtt_log_2025-06-23T200908.txt, size 21573 bytes
+ 2) mqtt_log_2025-06-23T204712.txt, size 996 bytes
+ 3) mqtt_log_2025-06-24T000937.txt, size 5863 bytes
+ 4) mqtt_log_2025-06-24T011035.txt, size 35184 bytes
+ 5) mqtt_log_2025-06-24T020539.txt, size 5713 bytes
+--------------------------------------------------
+list_logfiles(): Total number of log files found: 5
+--------------------------------------------------
+setup(): Connecting to MQTT broker at 5.196.78.28 on port 1883...
+setup(): Not deleting log files, flag: "delete_logs" = False
+setup(): Successfully connected to MQTT broker.
+setup(): Subscribed to topic: "sensors/UnoR4W/ambient/#"
+loop(): MQTT message: 432 received
+loop(): MQTT message: 433 received
+loop(): MQTT message: 434 received
+loop(): MQTT message: 435 received
+loop(): MQTT message: 436 received
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 437 received
+loop(): MQTT message: 438 received
+loop(): MQTT message: 439 received
+loop(): MQTT message: 440 received
+loop(): MQTT message: 441 received
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 442 received
+
+--------------------------------------
+After a small change, the output is:
+
+loop(): MQTT message: 448 received
+loop(): MQTT message: 449 received
+loop(): MQTT message: 450 received
+loop(): MQTT message: 451 received
+rotate_log_if_needed(): size of "mqtt_log_2025-06-24T020539.txt" is: 7853 bytes. Max size is: 51200 bytes.  <<<=== new
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 452 received
+[...]
+
+loop(): MQTT message: 573 received
+loop(): MQTT message: 574 received
+loop(): MQTT message: 575 received
+rotate_log_if_needed(): rotate log file not needed yet   <<<=== parameter/flag "show_size" False 
+loop(): MQTT message: 576 received
+loop(): MQTT message: 577 received
+loop(): MQTT message: 578 received
+loop(): MQTT message: 579 received
+loop(): MQTT message: 580 received
+rotate_log_if_needed(): size of "mqtt_log_2025-06-24T020539.txt" is: 21549 bytes. Max size is: 51200 bytes.
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 581 received
+loop(): MQTT message: 582 received
+loop(): MQTT message: 583 received
+loop(): MQTT message: 584 received
+loop(): MQTT message: 585 received
+rotate_log_if_needed(): rotate log file not needed yet   <<<=== parameter/flag "show_size" False 
+loop(): MQTT message: 586 received
+loop(): MQTT message: 587 received
+loop(): MQTT message: 588 received
+loop(): MQTT message: 589 received
+loop(): MQTT message: 590 received
+rotate_log_if_needed(): size of "mqtt_log_2025-06-24T020539.txt" is: 22619 bytes. Max size is: 51200 bytes.
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 591 received
+loop(): MQTT message: 592 received
+loop(): MQTT message: 593 received
+loop(): MQTT message: 594 received
+loop(): MQTT message: 595 received
+rotate_log_if_needed(): rotate log file not needed yet   <<<=== parameter/flag "show_size" False 
+loop(): MQTT message: 596 received
+loop(): MQTT message: 597 received
+
+

@@ -29,6 +29,7 @@ display.clear()
 presto.update()
 
 my_debug = False
+delete_logs = False
 
 temp = None
 pres = None
@@ -44,11 +45,15 @@ with open('secrets.json') as fp:
     secrets = ujson.loads(fp.read())
     
 # Test the existance of a logfile
-log_fn = None
+log_fn = None # Note: log_fn is set in the function create_logfile()
 log_path = None # "/sd/" + log_fn
-log_size_max = 5 * 1024  # 5 KB
+log_size_max = 50 * 1024  # 51200 bytes # 50 kB max log file size
 log_obj = None
 log_exist = False
+new_log_fn = None
+new_log_path = None
+new_log_obj = None
+new_log_exist = False
 
 def get_prefix():
     return "/sd/"
@@ -126,33 +131,43 @@ def get_active_log_filename():
     txt2 = "reference file"
     txt3 = "in the directory:"
     ret = None
-    #if not ref_file_checked:
+    active_log_fn = None
+    active_log_path = None
+    active_log_exist = False
+    active_log_size = 0
     try:
         if ref_obj:
             ref_obj.close()
         with open(ref_path, 'r') as ref_obj:
-            log_fn = ref_obj.readline().strip()  # Read the first line and remove trailing newline
+            active_log_fn = ref_obj.readline().strip()  # Read the first line and remove trailing newline
         if ref_obj:
             ref_obj.close()
         ref_file_checked = True
         
-        if log_fn:
-            print(TAG + txt1 + f"filename read from " + txt2 + f": \"{log_fn}\"")
+        if active_log_fn:
+            print(TAG + txt1 + f"filename read from " + txt2 + f": \"{active_log_fn}\"")
             # Check if the log file exists in the specified directory
-            if log_fn in os.listdir(get_prefix()):
-                print(TAG + txt1 + f"file: \"{log_fn}\" exists in " + txt3 + f"\"{get_prefix()}\"")
+            if active_log_fn in os.listdir(get_prefix()):
+                active_log_path = get_prefix() + active_log_fn
+                print(TAG + txt1 + f"file: \"{active_log_fn}\" exists in " + txt3 + f"\"{get_prefix()}\"")
+                active_log_size = os.stat(active_log_path)[6]  # File size in bytes
+                print(TAG+f"Active log file size: {active_log_size} bytes")
                 # Set the log path and log exist flag
-                log_path = get_prefix() + log_fn
-                log_exist = True
+                active_log_path = get_prefix() + active_log_fn
+                active_log_exist = True
+                #ret = active_log_fn  # Return the active log filename
             else:
-                print(TAG + txt1 + f"file: \"{log_fn}\" does not exist " + txt3 + f"\"{get_prefix()}\"")
+                print(TAG + txt1 + f"file: \"{active_log_fn}\" does not exist " + txt3 + f"\"{get_prefix()}\"")
                 # If the log file does not exist, we can create a new one
-                log_exist = False
-                log_path = None
-                log_fn = None
+                active_log_exist = False
+                active_log_path = None
+                active_log_fn = None
                 clear_ref_file()
 
-            ret = log_fn
+            ret = active_log_fn
+            log_fn = active_log_fn
+            log_path = active_log_path 
+            log_exist = active_log_exist
         else:
             print(TAG + txt1 + "filename not found in the " + txt2)
     except OSError as exc:
@@ -174,8 +189,9 @@ def pr_ref():
             with open(ref_path, 'r') as ref_obj:
                 for line in ref_obj:
                     f_cnt += 1
-                    f_cnt_str = "0" + str(f_cnt) if f_cnt < 10 else str(f_cnt)
-                    print(f"   {f_cnt_str}) {line.strip()}") # Remove trailing newline for cleaner output
+                    #f_cnt_str = "0" + str(f_cnt) if f_cnt < 10 else str(f_cnt)
+                    #print(f"   {f_cnt_str}) {line.strip()}") 
+                    print("{:s} {:02d}) {:s}".format(TAG, f_cnt, line.strip())) # Remove trailing newline for cleaner output
                 do_line()
             ret = f_cnt  # Return the number of lines printed
     except OSError as exc:
@@ -188,7 +204,9 @@ def get_iso_timestamp():
     return "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}".format(*t[:6])
 
 def new_logname():
-    return "mqtt_log_{}.txt".format(get_iso_timestamp())
+    fn = "mqtt_log_{}.txt".format(get_iso_timestamp())
+    # Replace ":" with "" for compatibility with MS Windows file systems
+    return fn.replace(":", "")
 
 def ck_log(fn):
     if isinstance(fn, str) and len(fn) > 0:
@@ -198,55 +216,75 @@ def ck_log(fn):
 
 # Create a new log file and add its filename to the ref file
 def create_logfile():
-    global log_fn, log_path, log_obj, log_exist, ref_path, ref_obj
+    global log_fn, log_path, log_obj, log_exist, ref_path, ref_obj, new_log_fn, new_log_path, new_log_obj
     TAG = "create_logfile(): "
-    if log_fn is None:
-        log_fn = new_logname()
-    if log_path is None:
-        log_path = get_prefix() + log_fn
+    
+    new_log_fn = new_logname()
+    if not my_debug:
+        print(f"new_logname() = {new_log_fn}")
+    
+    new_log_path = get_prefix() + new_log_fn
     try:
         if log_obj:
             log_obj.close()
-        with open(log_path, 'w') as log_obj:
+        with open(new_log_path, 'w') as log_obj:
             log_obj.write('---Log created on: {}---\n'.format(get_iso_timestamp()))
-        print(TAG+f"created new log file: \"{log_fn}\"")
+        print(TAG+f"created new log file: \"{new_log_fn}\"")
         # Check existance of the new log file
-        if ck_log(log_fn):
-            print(TAG+f"check: new log file: \"{log_fn}\" exists")
+        if ck_log(new_log_fn):
+            print(TAG+f"check: new log file: \"{new_log_fn}\" exists")
         else:
-            print(TAG+f"check: new log file: \"{log_fn}\" not found!")
+            print(TAG+f"check: new log file: \"{new_log_fn}\" not found!")
         # Make empty the ref file
         if ref_obj:
             ref_obj.close()
-        with open(ref_path, 'w') as ref_obj:
+        with open(ref_path, 'w') as ref_obj: # Make empty the ref file
             pass
         if ref_obj:
             ref_obj.close()
         # Add the filename of the new logfile to the ref file
         with open(ref_path, "w") as ref_obj:
-            ref_obj.write(log_fn)
-            print(TAG+f"added to ref file: \"{ref_fn}\" active log filename \"{log_fn}\"")
+            ref_obj.write(new_log_fn)
+            print(TAG+f"added to ref file: \"{ref_fn}\" the new active log filename \"{new_log_fn}\"")
             pr_ref()  # Print the contents of the ref file
     except OSError as exc:
         print(TAG+f"OSError: {exc}")
-
+    """
+    if new_log_fn is not None:
+        log_fn = new_log_fn # Update the global log_fn variable
+    if new_log_path is not None:
+        log_path = new_log_path # Update the global log_path variable
+    """
 
 # Function to close a log file that is too long
 # Then create a new log file
 # Add the new log filename in the ref file
-def rotate_log_if_needed():
-    global log_path, log_fn, log_size_max, log_obj, log_exist, ref_path, ref_fn, ref_obj
+def rotate_log_if_needed(show: bool = False):
+    global log_path, log_fn, log_size_max, log_obj, log_exist, ref_path, ref_fn, ref_obj, new_log_fn, new_log_path, new_log_obj
     TAG = "rotate_log_if_needed(): "
-    if log_fn:
-        if not my_debug:
-            print(TAG+f"current log filename = \"{log_fn}\"")
-        if ck_log(log_fn):
-            log_size = os.stat(log_path)[6]  # File size in bytes
-            print(TAG+f"size of \"{log_fn}\" is: {log_size} bytes. Max size is: {log_size_max}")
+    if new_log_fn is not None: # new_log_fn could have be created in the part MAIN
+        if ck_log(new_log_fn):
+            log_fn = new_log_fn # Update the global log_fn variable
+            current_log = new_log_fn # copy the current log filename
+            current_log_path = new_log_path # copy the current log path
+            log_exist = True
+    elif log_exist and log_fn is not None:
+        current_log = log_fn # copy the current log filename
+        current_log_path = get_prefix() + current_log # copy the current log path
+    if current_log:
+        if my_debug:
+            print(TAG+f"current log filename = \"{current_log}\"")
+        if ck_log(current_log):
+            log_size = os.stat(current_log_path)[6]  # File size in bytes
+            if my_debug or show:
+                print(TAG+f"size of \"{current_log}\" is: {log_size} bytes. Max size is: {log_size_max} bytes.")
             if log_size > log_size_max:
+                if my_debug:
+                    print(TAG+f"Log file: \"{current_log}\" is too long, creating a new log file")
                 create_logfile()
                 if my_debug:
-                    print(TAG+f"Log rotated to: \"{log_path}\"")  # log_fn, log_path changed in create_logfile()
+                    print(TAG+f"Current log file: \"{current_log}\" is closed")
+                    print(TAG+f"Log rotated to new log file: \"{log_path}\"")  # log_fn, log_path changed in create_logfile()
             else:
                 print(TAG+"rotate log file not needed yet")
         else:
@@ -261,6 +299,9 @@ def rotate_log_if_needed():
     if log_fn is None:
         print(TAG+"Log rotation failed:")
 
+#------------------ MAIN START HERE ------------------
+# The main function is not used in this script
+# but the code is structured to allow for easy integration into a larger system.
 TAG = "main(): "
 my_list = None 
 try:
@@ -270,6 +311,9 @@ try:
     if ref_file_exists():
         # Reference file exists;   
         # File exists; open for appending
+        active_log_fn = None
+        active_log_path = None
+        active_log_exist = False
         ref_exist = True
         ref_size = os.stat(ref_path)[6]  # File size in bytes
         if not my_debug:
@@ -279,16 +323,32 @@ try:
             print(TAG+f"Number of log files listed in reference file: {nr_log_files}")
             if nr_log_files > 0:
                 # read the log filename from the reference file
-                log_fn = get_active_log_filename()  # Get the active log filename from the reference file
+                active_log_fn = get_active_log_filename()  # Get the active log filename from the reference file
                 # print(TAG+f"Active log filename extracted from reference file: \"{log_fn}\"")
-                if log_fn is None:
+                if active_log_fn is None:
                     # No log filename found in the reference file
                     print(TAG+f"No active log filename found in the reference file: \"{ref_fn}\"")
+                else:
+                    # Check if the active log file exists
+                    if ck_log(active_log_fn):
+                        active_log_path = get_prefix() + log_fn
+                        active_log_exist = True
+               
+                # If the active log file exists, we can use it
+                # Otherwise, we create a new log file
+                if active_log_exist:
+                    print(TAG+f"Active log file: \"{active_log_fn}\" does exist in the directory: \"{get_prefix()}\"")
+                    active_log_path = get_prefix() + active_log_fn
+                    active_log_size = os.stat(active_log_path)[6]  # File size in bytes 
+                    log_fn = active_log_fn  # Update the global log_fn variable
+                    log_path = active_log_path  # Update the global log_path variable
+                else:
+                    print(TAG+f"Active log file: \"{active_log_fn}\" does not exist in the directory: \"{get_prefix()}\"")
+                    print(TAG+f"creating a new log file")
+                
+                    active_log_exist = False
+                    active_log_path = None
                     create_logfile()
-            else:
-                # The reference file is empty; create a new log file
-                print(TAG+f"reference file: \"{ref_fn}\" is empty, creating a new log file")
-                create_logfile()
         else:
             # There is no last log filename in the ref file.
             # Create a new log file and add to the ref file
@@ -365,15 +425,29 @@ msg_drawn = False
 # List log files starting with "mqtt_log"
 def list_logfiles():
     TAG = "list_logfiles(): "
-    log_prefix = 'mqtt_log'
+    list_log_prefix = 'mqtt_log'
+    list_log_path = ""
 
     try:
         files = os.listdir(get_prefix())
-        log_files = [f for f in files if f.startswith(log_prefix)]
-        # do_line()        
+        log_files = [f for f in files if f.startswith(list_log_prefix) and f.endswith('.txt')]
+        files = None  # Clear memory
+        # do_line()
+        cnt = 0      
         print(TAG+"MQTT log files:")
         for fname in log_files:
-            print("   "+fname)
+            #if fname.beginswith(list_log_prefix) and fname.endswith('.txt'):
+            cnt += 1
+            #print(TAG+f"fname = \"{fname}\"")
+            #if ck_log(fname):
+            list_log_path = get_prefix() + fname
+            log_size = os.stat(list_log_path)[6]
+            print("{:2d}) {}, size {} bytes".format(cnt, fname, log_size), end='\n')
+        do_line()
+        if cnt == 0:
+            print(TAG+"No log files found starting with \"{}\"".format(list_log_prefix))
+        else:
+            print(TAG+"Total number of log files found: {}".format(cnt))
         do_line()
     except OSError as e:
         print(TAG+"Error accessing directory:", e)
@@ -625,6 +699,7 @@ def draw(mode:int = 1):
 
 def pr_log():
     global log_path, log_obj, log_size_max
+    TAG = "pr_log(): "
     try:
         if log_obj:
             log_obj.close()
@@ -632,16 +707,18 @@ def pr_log():
         if log_path:
             log_size = os.stat(log_path)[6]  # File size in bytess
             if log_size > 0:
-                print(f"Size of log file: {log_size}. Max log file size can be: {log_size_max}")
+                print(f"Size of log file: {log_size}. Max log file size can be: {log_size_max} bytes.")
                 print(f"Contents of log file: \"{log_path}\"")
                 with open(log_path, 'r') as log_obj:
+                    f_cnt = 0
                     for line in log_obj:
-                        print(line.strip())  # Remove trailing newline for cleaner output
+                        f_cnt += 1
+                        print("{:s} {:02d}) {:s}".format(TAG, f_cnt, line.strip())) # Remove trailing newline for cleaner output
                     do_line()
             else:
-                print(f"log file \"{log_path}\" is empty")
+                print(TAG+f"log file \"{log_path}\" is empty")
     except OSError as exc:
-        print(f"Log file not found or unable to open. Error: {exc}")
+        print(TAG+f"No log file found or unable to open. Error: {exc}")
 
 def cleanup():
     global ref_exist, ref_obj, ref_path, log_exist, log_obj, log_path
@@ -658,7 +735,10 @@ def setup():
     client = MQTTClient(CLIENT_ID, BROKER, port=PORT)
     client.set_callback(mqtt_callback)
     display.clear()
-    del_logfiles() # for test
+    if delete_logs:
+        del_logfiles() # for test
+    else:
+        print(TAG+f"Not deleting log files, flag: \"delete_logs\" = {"True" if delete_logs else "False"}")
     try:
         client.connect()
         print(TAG+f"Successfully connected to MQTT broker.") # at {BROKER}.")
@@ -679,7 +759,7 @@ def setup():
         pr_log()
         raise
 
-# Here begins the "main()" part:
+# Here begins the "loop()" part:
 # def main():
 # global client, msg_rcvd, last_update_time, publisher_msgID
 # for compatibility with the Presto "system" the line "def main()" and below it the "globals" line have been removed
@@ -688,8 +768,28 @@ list_logfiles()
 setup()
 draw(0) # Ensure the default message "Waiting for Messages..." is displayed
 TAG = "loop(): "
+start_t = time.time()
+current_t = start_t
+elapsed_t = 0
+interval_t = 5 * 60  # Interval to check for call rotate_log_if_needed() in seconds (300 seconds = 5 minutes)
+last_triggered = -1
+show_size = True  # Show the size of the current log file
 while True:
     try:
+        current_t = time.time()
+        elapsed_t = current_t - start_t
+        if my_debug:
+            if elapsed_t % 10 == 0 and (elapsed_t != last_triggered or last_triggered == -1):
+                last_triggered = elapsed_t
+                print(TAG+f"elapsed_t = {elapsed_t:.2f} seconds")
+                # print(TAG+f"current_t = {current_t}, start_t = {start_t}, elapsed_t = {elapsed_t:.2f} seconds")
+        if elapsed_t >= interval_t:
+            start_t = current_t  # Reset the start time
+            # Check if we need to create a new log file
+            # and show the size of the current log file
+            rotate_log_if_needed(show=show_size)
+            show_size = not show_size  # Toggle the display of the log file size  
+        
         # Wait for MQTT messages (non-blocking check)
         client.check_msg()
 
