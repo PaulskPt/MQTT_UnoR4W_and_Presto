@@ -138,7 +138,14 @@ As soon as the connection with the MQTT broker is established, the sending of MQ
 The sending of these messages will repeat with an interval of 1 minute.
 The built-in RTC will be synchronized from an NTP unixtime every 15 minutes (see: unsigned long ntp_interval_t )
 The NTPClient will be set with a utc-offset with can be changed in the file secret.h.
-
+With help of Microsoft Copilot I added the function ```void serialPrintf(const char *format, ...) ```, to 
+facilitate a C++ style printf() functionality because the Arduino Serial (UART) doesn't have a printf() function.
+Example:
+```
+  IPAddress ip = WiFi.localIP();
+  serialPrintf(PSTR("IP Address: %s\n"), ip.toString().c_str());
+```
+An instance of the NTPClient is created as follows:
 ```
 NTPClient timeClient(ntpUDP, SECRET_NTP_SERVER1, utc_offset, ntp_interval_t);  // line 38
 ```
