@@ -174,29 +174,24 @@ At the moment the script is stopped, either by pressing the "stop" button in the
 the contents of the active log file will be printed to the shell (serial output).
 Older logfiles on the SD-Card will be deleted.
 
-At each loop and passing of the function ```send_msg()``` the algorithm will check if the size of the logfil has passed a limit set.
+Every five minutes, in the main loop the algorithm will check if the size of the active logfile has passed the maximum file size limit (50 kBytes).
 If so, a new empty log will be created. See an example of this below:
 ```
 [...]
-loop(): MQTT message:  72 received
-loop(): MQTT message:  73 received
-loop(): MQTT message:  74 received
-loop(): MQTT message:  75 received
-rotate_log_if_needed(): current log filename = "mqtt_log_2025-06-23T172345.txt"
-rotate_log_if_needed(): size of "mqtt_log_2025-06-23T172345.txt" is: 5130 bytes. Max size is: 5120 bytes.
-create_logfile(): created new log file: "mqtt_log_2025-06-23T172345.txt"
-create_logfile(): check: new log file: "mqtt_log_2025-06-23T172345.txt" exists
-create_logfile(): added to ref file: "mqtt_latest_log_fn.txt" active log filename "mqtt_log_2025-06-23T172345.txt"
-pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
-   01) mqtt_log_2025-06-23T172345.txt
---------------------------------------------------
-loop(): MQTT message:  76 received
-loop(): MQTT message:  77 received
-loop(): MQTT message:  78 received
-loop(): MQTT message:  79 received
-loop(): MQTT message:  80 received
-loop(): MQTT message:  81 received
-loop(): MQTT message:  82 received
+loop(): MQTT message: 573 received
+loop(): MQTT message: 574 received
+loop(): MQTT message: 575 received
+rotate_log_if_needed(): rotate log file not needed yet   <<<=== parameter/flag "show_size" False 
+loop(): MQTT message: 576 received
+loop(): MQTT message: 577 received
+loop(): MQTT message: 578 received
+loop(): MQTT message: 579 received
+loop(): MQTT message: 580 received
+rotate_log_if_needed(): size of "mqtt_log_2025-06-24T020539.txt" is: 21549 bytes. Max size is: 51200 bytes.
+rotate_log_if_needed(): rotate log file not needed yet
+loop(): MQTT message: 581 received
+loop(): MQTT message: 582 received
+loop(): MQTT message: 583 received
 Traceback (most recent call last):
   File "<stdin>", line 706, in <module>
 KeyboardInterrupt:
@@ -215,7 +210,7 @@ loop(): KeyboardInterrupt: exiting...
 pr_ref(): Contents of ref file: "/sd/mqtt_latest_log_fn.txt":
    01) mqtt_log_2025-06-23T172345.txt
 --------------------------------------------------
-Size of log file: 1102. Max log file size can be: 5120 bytes
+Size of log file: 1102. Max log file size can be: 51200 bytes
 Contents of log file: "/sd/mqtt_log_2025-06-23T172345.txt"
 ---Log created on: 2025-06-23T18:13:52---
 
