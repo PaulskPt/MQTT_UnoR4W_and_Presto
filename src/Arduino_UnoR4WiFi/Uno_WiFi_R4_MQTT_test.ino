@@ -18,6 +18,8 @@
 // It provides functions to get the current time and date from the RTC (Real Time Clock)
 
 bool my_debug = false;
+bool do_test_reset = false;
+int resetPin12 = 12; //
 
 char sID[] = "UnoR4W";  // length 6 + 1
 unsigned long msgID = 0L;
@@ -59,6 +61,37 @@ int count = 0;
 Adafruit_BME280 bme; // I2C
 
 unsigned long delayTime;
+
+/* Function to perform a software reset on an Arduino board,
+   specifically using the ArduinoCore-renesas.
+   Arduino has a built-in function named as resetFunc()
+   which we need to declare at address 0 and when we 
+   execute this function Arduino gets reset automatically.
+   Using this function resulted in a "Fault on interrupt 
+   or bare metal (no OS) environment crash!
+*/
+void (*resetFunc)
+  (void) = 0;
+
+/* This is a more reliable reset method,
+   however it need that a wire is connected
+   between the RESET-Pin and Pin-12.
+   We're going to try this
+*/
+void resetFunc_via_Pin12()
+{
+  digitalWrite(led, HIGH); // turn the LED on
+  Serial.println("on");
+  led_on();
+  delay(1000); // wait 1 second
+  Serial.println("off"); // turn the LED off
+  led_off();
+  delay(1000); // wait 1 second
+  Serial.println(F("Resetting via Pin 12..."));
+  delay(10);
+  digitalWrite(resetPin12, LOW); // Execute a RESET
+  Serial.println(F("This text should never print!")); 
+}
 
 void serialPrintf(const char *format, ...) {
   char buffer[160]; // You can increase this if you need larger output
@@ -208,6 +241,7 @@ bool send_msg()
                                  "is extreme",    // 5
                                  "resetting" };   // 6
   bool ret = false;
+  bool do_reset = false;
   float Rvalue0 = bme.readTemperature();
   float Rvalue1 = bme.readPressure() / 100.0F;
   // According to Copilot the calculation for height is:
@@ -215,7 +249,7 @@ bool send_msg()
   float Rvalue2 = bme.readAltitude(SEALEVELPRESSURE_HPA);
   float Rvalue3 = bme.readHumidity();
   
-  bool do_test_reset = false;
+  do_test_reset = false;
   /*
   if (do_test_reset)
   {
@@ -225,13 +259,6 @@ bool send_msg()
     Rvalue3 = 100.0;
   }
   */
-
-  if (Rvalue0 == 0.0 && Rvalue1 == 1010.0 && Rvalue2 == 0.0 && Rvalue3 == 100.0)
-  {
-    Serial.println(F("BME280 values are unreliable. Going to reset in 5 seconds..."));
-    delay(5000);
-    NVIC_SystemReset();
-  }
 
   if (do_test_reset)
     Rvalue0 = -20.0; // For testing purposes only
@@ -279,6 +306,20 @@ bool send_msg()
     serialPrintf(PSTR("%s%s %s to %4.1f\n"), txt0, txts[6], txts[4], Rvalue3);
   }
   
+  if ( isnan(Rvalue0) && isnan(Rvalue1) && isnan(Rvalue3) ) // do not check Rvalue2 (Altitude) because it will be 0.00 m
+    do_reset = true;
+  else if (Rvalue0 == 0.0 && Rvalue1 == 1010.0 && Rvalue2 == 0.0 && Rvalue3 == 100.0)
+    do_reset = true;
+
+  if (do_reset)
+  {
+    Serial.println(F("BME280 values are unreliable. Going to reset in 5 seconds..."));
+    delay(5000);
+    // NVIC_SystemReset();
+    // resetFunc();
+    resetFunc_via_Pin12();
+  }
+
   char topic[32];
   char msg[128];
   
@@ -357,6 +398,7 @@ void setup() {
   pinMode(led, OUTPUT);      // set the LED pin mode
   //define LED_BUILTIN as an output
   pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(resetPin12, OUTPUT); 
 
   // attempt to connect to WiFi network:
   if (!connectToWiFi())
@@ -392,7 +434,10 @@ void setup() {
       Serial.print(F("   ID of 0x56-0x58 represents a BMP 280,\n"));
       Serial.print(F("        ID of 0x60 represents a BME 280.\n"));
       Serial.print(F("        ID of 0x61 represents a BME 680.\n"));
-      while (1) delay(10);
+      Serial.print(F("doing a reset via Pin 12 in 5 seconds..."));
+      delay(5000);
+      // resetFunc(); // do a software reset
+      resetFunc_via_Pin12(); // do a reset via Pin 12
   }
 
   serialPrintf(PSTR("\nAttempting to connect to the MQTT broker: %s:%s\n"), broker, String(port).c_str());

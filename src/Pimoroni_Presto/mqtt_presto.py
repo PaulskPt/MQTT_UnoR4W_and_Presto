@@ -8,7 +8,9 @@ import time
 from presto import Presto
 from umqtt.simple import MQTTClient
 import os
+import sys # See: https://github.com/dhylands/upy-examples/blob/master/print_exc.py
 import time
+# import traceback # See: https://docs.python.org/3/library/traceback.html
 
 # Setup for the Presto display
 presto = presto = Presto(ambient_light=False)
@@ -30,6 +32,7 @@ presto.update()
 
 my_debug = False
 delete_logs = False
+err_log_file = None
 
 temp = None
 pres = None
@@ -45,6 +48,9 @@ with open('secrets.json') as fp:
     secrets = ujson.loads(fp.read())
     
 # Test the existance of a logfile
+err_log_fn = "mqtt_err_log.txt"
+err_log_path = None
+err_log_obj = None
 log_fn = None # Note: log_fn is set in the function create_logfile()
 log_path = None # "/sd/" + log_fn
 log_size_max = 50 * 1024  # 51200 bytes # 50 kB max log file size
@@ -262,6 +268,7 @@ def create_logfile():
 def rotate_log_if_needed(show: bool = False):
     global log_path, log_fn, log_size_max, log_obj, log_exist, ref_path, ref_fn, ref_obj, new_log_fn, new_log_path, new_log_obj
     TAG = "rotate_log_if_needed(): "
+    current_log = None
     if new_log_fn is not None: # new_log_fn could have be created in the part MAIN
         if ck_log(new_log_fn):
             log_fn = new_log_fn # Update the global log_fn variable
@@ -759,6 +766,26 @@ def setup():
         pr_log()
         raise
 
+def write_to_err_log(err_msg:str = None):
+    global err_log_obj, err_log_fn, err_log_path
+    TAG = "write_to_err_log(): "
+    if err_msg is None:
+        return
+    if err_log_fn is None:
+        err_log_fn = "mqtt_err_log.txt"
+    if err_log_path is None:
+        err_log_path = get_prefix() + err_log_fn
+
+    le = len(err_msg)
+    if le > 0:
+        if err_log_obj:
+            err_log_obj.close()
+        with open(err_log_path, 'w') as err_log_obj:
+            err_log_obj.write(err_msg)
+            print(TAG+f"error \"{err_msg}\" written to error log file: \"{err_log_path}\" created")
+        if err_log_obj:
+            err_log_obj.close()
+
 # Here begins the "loop()" part:
 # def main():
 # global client, msg_rcvd, last_update_time, publisher_msgID
@@ -772,6 +799,11 @@ start_t = time.time()
 current_t = start_t
 elapsed_t = 0
 interval_t = 5 * 60  # Interval to check for call rotate_log_if_needed() in seconds (300 seconds = 5 minutes)
+msg_rx_timeout_interval_t = 2 * 60 # 2 minutes
+msg_rx_timeout_start_t = start_t # same as start_t
+msg_rx_timeout_curr_t = 0
+msg_rx_timeout_elapsed_t = 0
+msg_rx_timout = False
 last_triggered = -1
 show_size = True  # Show the size of the current log file
 while True:
@@ -791,8 +823,25 @@ while True:
             show_size = not show_size  # Toggle the display of the log file size  
         
         # Wait for MQTT messages (non-blocking check)
-        client.check_msg()
-
+        
+     
+        while True:
+            client.check_msg()
+            # print(TAG+"we passed the client.check_msg(). Line 830")
+            if msg_rcvd:
+                break
+            msg_rx_timeout_current_t = time.time()
+            msg_rx_timeout_elapsed_t = msg_rx_timeout_current_t - msg_rx_timeout_start_t
+            if msg_rx_timeout_elapsed_t >= msg_rx_timeout_interval_t:
+                msg_rx_timeout_start_t = msg_rx_timeout_current_t
+                msg_rx_timeout = True
+                break
+            
+        if msg_rx_timeout:
+            msg_rx_timeout = False # reset flag
+            print(TAG+"msg rx timedout!")
+            continue # loop
+        
         # Refresh the display periodically
         if msg_rcvd:
             split_msg()
@@ -804,19 +853,32 @@ while True:
             last_update_time = time.time()
     except Exception as e:
         if e.args[0] == 103:
-            print(TAG+f"Error ECONNABORTED")
+            print(TAG+f"Error ECONNABORTED") # = Software caused connection abort
             cleanup()
             raise RuntimeError
-        else:
-            print(TAG+f"Error while waiting for MQTT messages: {e}")
-            cleanup()
-            
-            raise RuntimeError
+    except Exception as exc:
+            if err_log_file is None:
+                err_log_file is "mqtt_err_log.txt"
+            if err_log_path is None:
+                err_log_path = get_prefix() + err_log_file
+            if exc.args[0] == 103:
+                print(TAG+f"Error ECONNABORTED") # = Software caused connection abort
+                cleanup()
+                raise RuntimeError
+            else:
+                print(TAG+f"Error while waiting for MQTT messages: {exc}")
+                sys.print_exception(exc, err_log_path)
+                err_log_path.flush()
+                cleanup()        
+                raise RuntimeError
     except KeyboardInterrupt as e:
         print(TAG+f"KeyboardInterrupt: exiting...\n")
         pr_ref()
         pr_log()
         raise
+    
+    # err_log_file = open('/sd/mqtt_err_log.txt', 'w')
+    # print('Test mqtt error log', file=err_log_file)
 
 # for compatibility with the Presto "system" the next two lines have been commented out
 # if __name__ == '__main__':
