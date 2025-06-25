@@ -250,6 +250,13 @@ The structure of the payload of the mqtt messages used in this project is:
      {Temperature:27.66,Pressure:1002.06,Altitude:93.59,Humidity:45.57,datetime:2025-06-23T16:58:47,msgID:1}
 ```
 
+## Reset for device 1
+It happened already a few times that the BME280 readings were unreliable. I experienced that the faulty readings
+did not correct. I don't know yet if these faulty readings are caused by an error on the I2C-bus.
+In the mean time I created a resetPin12() function that will be called as soon as there are unreliable readings.
+Note that you must connect a wire betwen the RST-pin and pin 12 to be able to perform a reset from within this
+sketch.
+
 ## Debug info
 - If you want to see more log output (Arduino IDE: Serial Monitor or Thonny IDE: Shell), set variable ```my_debug``` to:
   ```
